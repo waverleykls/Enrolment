@@ -3,39 +3,66 @@
     ViewData["Title"] = "Medical Details";
 }
 
+@section scripts
+{
+    <script>
+        "use strict";
+
+        (function($) {
+
+            var toggleElement = function (flag, element) {
+                if (flag === true || flag === "true") {
+                    element.removeAttr("disabled");
+                } else {
+                    element.attr("disabled", "disabled");
+                }
+            }
+
+            toggleElement($("input[name='HasAnyMedicalConcern']").filter(":checked").val(), $("#MedicalConcernDetails"));
+            toggleElement($("input[name='IsTakingMedication']").filter(":checked").val(), $("#MedicationDetails"));
+
+            $("input[name='HasAnyMedicalConcern']")
+                .click(function() {
+                    toggleElement($(this).val(), $("#MedicalConcernDetails"));
+                });
+
+            $("input[name='IsTakingMedication']")
+                .click(function() {
+                    toggleElement($(this).val(), $("#MedicationDetails"));
+                });
+        })(jQuery);
+    </script>
+}
+
 <div class="row">
     <h2>Medical Details</h2>
 
     <form class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-horizontal" asp-controller="Home" asp-action="SetMedicalDetails" method="post">
         <div class="form-group">
-            <input class="form-control" asp-for="FirstName" />
-        </div>
-        <div class="form-group">
-            <input class="form-control" asp-for="MiddleNames" />
-        </div>
-        <div class="form-group">
-            <input class="form-control" asp-for="LastName" />
-        </div>
-        <div class="form-group">
-            <label class="control-label control-label-placeholder" asp-for="Relationships"></label>
-            @foreach (var item in Model.Relationships)
+            <p>Does your child suffere from any medical condition? eg) asthma, epilepsy, allergies, etc</p>
+            @foreach (var item in Model.MedicalConcerns)
             {
                 <label class="control-label-normal">
-                    <input asp-for="RelationshipToStudent" type="radio" value="@item.Value" /> @item.Text
+                    <input asp-for="HasAnyMedicalConcern" type="radio" value="@item.Value" /> @item.Text
                 </label>
             }
         </div>
         <div class="form-group">
-            <input class="form-control" asp-for="HomePhone" />
+            <p>If Yes, please specify and provide their medical plans:</p>
+            <textarea class="form-control" asp-for="MedicalConcernDetails"></textarea>
         </div>
         <div class="form-group">
-            <input class="form-control" asp-for="WorkPhone" />
+            <p>Is your child currently on any medication?</p>
+            @foreach (var item in Model.Medications)
+            {
+                <label class="control-label-normal">
+                    <input asp-for="IsTakingMedication" type="radio" value="@item.Value" /> @item.Text
+                </label>
+            }
         </div>
         <div class="form-group">
-            <input class="form-control" asp-for="MobilePhone" />
-        </div>
-        <div class="form-group">
-            <input class="form-control" asp-for="Email" />
+            <p>If Yes, please specify:</p>
+            <textarea class="form-control" asp-for="MedicationDetails"></textarea>
         </div>
 
         <div class="form-group text-center">

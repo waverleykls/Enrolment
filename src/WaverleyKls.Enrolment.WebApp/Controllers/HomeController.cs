@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WaverleyKls.Enrolment.Helpers;
 using WaverleyKls.Enrolment.ViewModels;
 
@@ -186,6 +186,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetGuardianConsents(GuardianConsentsViewModel model)
         {
+            if (!model.AgreeToc || !model.AgreePhoto || !model.AgreeSms || !model.AgreeKakaoTalk)
+            {
+                ModelState.AddModelError("AgreeToc", "ToC must be ticked");
+            }
+
             if (!ModelState.IsValid)
             {
                 var vm = new GuardianConsentsViewModel(model);

@@ -4,6 +4,16 @@ namespace WaverleyKls.Enrolment.ViewModels.Generators
 {
     public static class CommonItemsGenerator
     {
+        public static IEnumerable<KeyValuePair<string, bool>> GetAnswers()
+        {
+            var answers = new[]
+                          {
+                              new KeyValuePair<string, bool>("Yes", true),
+                              new KeyValuePair<string, bool>("No", false),
+                          };
+            return answers;
+        }
+
         public static IEnumerable<KeyValuePair<string, string>> GetGenders()
         {
             var genders = new[]
