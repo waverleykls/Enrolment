@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "Microsoft.AspNetCore.CookiePolicy": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.1",
     "Microsoft.AspNetCore.Razor.Tools": {
@@ -17,6 +18,7 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
+    "Newtonsoft.Json": "9.0.1",
     "WaverleyKls.Enrolment.Helpers": "1.0.0-*",
     "WaverleyKls.Enrolment.ViewModels": "1.0.0-*"
   },

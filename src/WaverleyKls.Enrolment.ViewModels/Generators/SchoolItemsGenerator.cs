@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WaverleyKls.Enrolment.ViewModels
+namespace WaverleyKls.Enrolment.ViewModels.Generators
 {
     public static class SchoolItemsGenerator
     {

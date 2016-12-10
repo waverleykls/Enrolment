@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace WaverleyKls.Enrolment.ViewModels
+namespace WaverleyKls.Enrolment.ViewModels.Generators
 {
     public static class DateTimeItemsGenerator
     {

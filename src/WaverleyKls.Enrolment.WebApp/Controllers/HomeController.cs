@@ -1,73 +1,206 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 using WaverleyKls.Enrolment.Helpers;
 using WaverleyKls.Enrolment.ViewModels;
 
 namespace WaverleyKls.Enrolment.WebApp.Controllers
 {
+    [Route("")]
     public class HomeController : Controller
     {
-        private readonly CookieHelper _helper;
+        private readonly ICookieHelper _helper;
 
-        public HomeController()
+        public HomeController(ICookieHelper helper)
         {
-            this._helper = new CookieHelper(new CookieOptions() { HttpOnly = true, Secure = false });
-        }
+            if (helper == null)
+            {
+                throw new ArgumentNullException(nameof(helper));
+            }
 
+            this._helper = helper;
+        }
 
         public IActionResult Index()
         {
-            return View();
+            return this.View();
         }
 
-        public IActionResult Student()
+        [Route("start-over")]
+        [HttpGet]
+        public async Task<IActionResult> ClearEnrolmentForm()
         {
-            var formId = this._helper.GetFormId(this);
+            await this._helper.ClearFormIdAsync(this).ConfigureAwait(false);
+
+            return this.RedirectToAction("GetStudentDetailsForm");
+        }
+
+        [Route("student-details")]
+        [HttpGet]
+        public async Task<IActionResult> GetStudentDetailsForm()
+        {
+            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
 
             var vm = new StudentDetailsViewModel();
 
-            return this.View(vm);
+            return this.View("StudentDetails", vm);
         }
 
+        [Route("student-details")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Student(StudentDetailsViewModel model)
+        public async Task<IActionResult> SetStudentDetails(StudentDetailsViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 var vm = new StudentDetailsViewModel(model);
 
-                return this.View(vm);
+                return this.View("StudentDetails", vm);
             }
 
             // TODO: If valid, save student details and move to the next screen.
-            var formId = this._helper.GetFormId(this);
+            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            return this.View();
+            return this.RedirectToAction("GetGuardianDetailsForm");
         }
 
-        public IActionResult About()
+        [Route("guardian-details")]
+        [HttpGet]
+        public IActionResult GetGuardianDetailsForm()
         {
-            ViewData["Message"] = "Your application description page.";
+            var vm = new GuardianDetailsViewModel();
 
-            return View();
+            return this.View("GuardianDetails", vm);
         }
 
-        public IActionResult Contact()
+        [Route("guardian-details")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetGuardianDetails(GuardianDetailsViewModel model)
         {
-            ViewData["Message"] = "Your contact page.";
+            if (!ModelState.IsValid)
+            {
+                var vm = new GuardianDetailsViewModel(model);
 
-            return View();
+                return this.View("GuardianDetails", vm);
+            }
+
+            // TODO: If valid, save guardian details and move to the next screen.
+            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
+                                 ? "GetStudentDetailsForm"
+                                 : "GetEmergencyContactDetailsForm";
+
+            return this.RedirectToAction(actionName);
         }
 
-        public IActionResult Error()
+        [Route("emergency-contact-details")]
+        [HttpGet]
+        public IActionResult GetEmergencyContactDetailsForm()
         {
-            return View();
+            var vm = new EmergencyContactDetailsViewModel();
+
+            return this.View("EmergencyContactDetails", vm);
+        }
+
+        [Route("emergency-contact-details")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetEmergencyContactDetails(EmergencyContactDetailsViewModel model)
+        {
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
+                                 ? "GetGuardianDetailsForm"
+                                 : "GetMedicalDetailsForm";
+
+            if (model.IsSameAsGuardianDetails)
+            {
+                // TODO: Use parent/guardian details for emergency contact details.
+
+                return this.RedirectToAction(actionName);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var vm = new EmergencyContactDetailsViewModel(model);
+
+                return this.View("EmergencyContactDetails", vm);
+            }
+
+            // TODO: If valid, save guardian details and move to the next screen.
+
+            return this.RedirectToAction(actionName);
+        }
+
+        [Route("medical-details")]
+        [HttpGet]
+        public IActionResult GetMedicalDetailsForm()
+        {
+            var vm = new MedicalDetailsViewModel();
+
+            return this.View("MedicalDetails", vm);
+        }
+
+        [Route("medical-details")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetMedicalDetails(MedicalDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var vm = new MedicalDetailsViewModel(model);
+
+                return this.View("MedicalDetails", vm);
+            }
+
+            // TODO: If valid, save guardian details and move to the next screen.
+            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
+                                 ? "GetEmergencyContactDetailsForm"
+                                 : "GetGuardianConsentForm";
+
+            return this.RedirectToAction(actionName);
+        }
+
+        [Route("guardian-consents")]
+        [HttpGet]
+        public IActionResult GetGuardianConsentsForm()
+        {
+            var vm = new GuardianConsentsViewModel();
+
+            return this.View("GuardianConsents", vm);
+        }
+
+        [Route("guardian-consents")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetGuardianConsents(GuardianConsentsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var vm = new GuardianConsentsViewModel(model);
+
+                return this.View("GuardianConsents", vm);
+            }
+
+            // TODO: If valid, save guardian details and move to the next screen.
+            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
+                                 ? "GetMedicalDetailsForm"
+                                 : "GetConfirmation";
+
+            return this.RedirectToAction(actionName);
         }
     }
 }

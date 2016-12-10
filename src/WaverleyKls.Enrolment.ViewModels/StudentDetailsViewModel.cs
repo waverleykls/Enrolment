@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
+
+using WaverleyKls.Enrolment.ViewModels.Generators;
 
 namespace WaverleyKls.Enrolment.ViewModels
 {
@@ -46,6 +48,11 @@ namespace WaverleyKls.Enrolment.ViewModels
 
         public StudentDetailsViewModel(StudentDetailsViewModel model) : this()
         {
+            if (model == null)
+            {
+                return;
+            }
+
             this.FirstName = model.FirstName;
             this.MiddleNames = model.MiddleNames;
             this.LastName = model.LastName;

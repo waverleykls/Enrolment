@@ -1,24 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace WaverleyKls.Enrolment.Helpers
 {
-    public class CookieHelper
+    public class CookieHelper : ICookieHelper
     {
         private const string FormId = "formId";
 
-        private readonly CookieOptions _options;
+        private bool _disposed;
 
-        public CookieHelper(CookieOptions options = null)
+        public async Task ClearFormIdAsync(Controller controller)
         {
-            this._options = options ?? new CookieOptions() { HttpOnly = true, Secure = true };
+            await Task.Factory.StartNew(() => ClearFormId(controller)).ConfigureAwait(false);
         }
 
-        public string GetFormId(Controller controller, CookieOptions options = null)
+        public async Task<string> GetFormIdAsync(Controller controller)
+        {
+            var formId = await Task.Factory.StartNew(() => this.GetFormId(controller)).ConfigureAwait(false);
+
+            return formId;
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (this._disposed)
+            {
+                return;
+            }
+
+            this._disposed = true;
+        }
+
+        private void ClearFormId(Controller controller)
+        {
+            controller.Response.Cookies.Delete(FormId);
+        }
+
+        private string GetFormId(Controller controller)
         {
             string formId;
             if (controller.Request.Cookies.TryGetValue(FormId, out formId))
@@ -27,7 +50,8 @@ namespace WaverleyKls.Enrolment.Helpers
             }
 
             formId = Guid.NewGuid().ToString();
-            controller.Response.Cookies.Append(FormId, formId, options ?? this._options);
+
+            controller.Response.Cookies.Append(FormId, formId);
 
             return formId;
         }
