@@ -2,10 +2,9 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.1"
   },
 
   "frameworks": {
-    "net461": {}
+    "net461": { }
   }
 }

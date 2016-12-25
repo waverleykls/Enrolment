@@ -9,6 +9,6 @@ namespace WaverleyKls.Enrolment.Helpers
     {
         Task ClearFormIdAsync(Controller controller);
 
-        Task<string> GetFormIdAsync(Controller controller);
+        Task<Guid> GetFormIdAsync(Controller controller);
     }
 }

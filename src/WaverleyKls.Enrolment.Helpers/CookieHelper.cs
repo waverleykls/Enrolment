@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
+using WaverleyKls.Enrolment.Extensions;
+
 namespace WaverleyKls.Enrolment.Helpers
 {
     public class CookieHelper : ICookieHelper
@@ -16,7 +18,7 @@ namespace WaverleyKls.Enrolment.Helpers
             await Task.Factory.StartNew(() => ClearFormId(controller)).ConfigureAwait(false);
         }
 
-        public async Task<string> GetFormIdAsync(Controller controller)
+        public async Task<Guid> GetFormIdAsync(Controller controller)
         {
             var formId = await Task.Factory.StartNew(() => this.GetFormId(controller)).ConfigureAwait(false);
 
@@ -41,17 +43,19 @@ namespace WaverleyKls.Enrolment.Helpers
             controller.Response.Cookies.Delete(FormId);
         }
 
-        private string GetFormId(Controller controller)
+        private Guid GetFormId(Controller controller)
         {
-            string formId;
-            if (controller.Request.Cookies.TryGetValue(FormId, out formId))
+            Guid formId;
+            string base64EncodedFormId;
+            if (controller.Request.Cookies.TryGetValue(FormId, out base64EncodedFormId))
             {
+                formId = base64EncodedFormId.ToGuid();
                 return formId;
             }
 
-            formId = Guid.NewGuid().ToString();
+            formId = Guid.NewGuid();
 
-            controller.Response.Cookies.Append(FormId, formId);
+            controller.Response.Cookies.Append(FormId, formId.ToBase64String());
 
             return formId;
         }

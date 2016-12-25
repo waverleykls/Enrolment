@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 using WaverleyKls.Enrolment.Helpers;
 using WaverleyKls.Enrolment.ViewModels;
 
