@@ -23,6 +23,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.Helpe
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.Extensions", "src\WaverleyKls.Enrolment.Extensions\WaverleyKls.Enrolment.Extensions.xproj", "{71CA5D94-A18C-4BAF-8B2E-B6640E7CC02C}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.EntityModels", "src\WaverleyKls.Enrolment.EntityModels\WaverleyKls.Enrolment.EntityModels.xproj", "{46001BA4-7C5F-406C-B1B2-39878DBB1286}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.Services", "src\WaverleyKls.Enrolment.Services\WaverleyKls.Enrolment.Services.xproj", "{0169343B-C653-4C50-BA86-C3EDCFFE59AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{71CA5D94-A18C-4BAF-8B2E-B6640E7CC02C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71CA5D94-A18C-4BAF-8B2E-B6640E7CC02C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71CA5D94-A18C-4BAF-8B2E-B6640E7CC02C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46001BA4-7C5F-406C-B1B2-39878DBB1286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46001BA4-7C5F-406C-B1B2-39878DBB1286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46001BA4-7C5F-406C-B1B2-39878DBB1286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46001BA4-7C5F-406C-B1B2-39878DBB1286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0169343B-C653-4C50-BA86-C3EDCFFE59AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0169343B-C653-4C50-BA86-C3EDCFFE59AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0169343B-C653-4C50-BA86-C3EDCFFE59AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0169343B-C653-4C50-BA86-C3EDCFFE59AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,5 +66,7 @@ Global
 		{A63F6848-2CE4-4A82-8666-6994A48CD4BF} = {85E520AD-94BA-421C-B64D-EA364574C937}
 		{902B5F65-B787-47E7-B7DE-F685F011125C} = {85E520AD-94BA-421C-B64D-EA364574C937}
 		{71CA5D94-A18C-4BAF-8B2E-B6640E7CC02C} = {85E520AD-94BA-421C-B64D-EA364574C937}
+		{46001BA4-7C5F-406C-B1B2-39878DBB1286} = {85E520AD-94BA-421C-B64D-EA364574C937}
+		{0169343B-C653-4C50-BA86-C3EDCFFE59AC} = {85E520AD-94BA-421C-B64D-EA364574C937}
 	EndGlobalSection
 EndGlobal

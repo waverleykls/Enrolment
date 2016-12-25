@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
+using WaverleyKls.Enrolment.EntityModels;
 using WaverleyKls.Enrolment.Helpers;
+using WaverleyKls.Enrolment.WebApp.Settings;
 
 namespace WaverleyKls.Enrolment.WebApp
 {
@@ -24,6 +27,12 @@ namespace WaverleyKls.Enrolment.WebApp
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets();
+            }
+
             Configuration = builder.Build();
         }
 
@@ -32,6 +41,9 @@ namespace WaverleyKls.Enrolment.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connStrings = Configuration.Get<ConnectionStringsSettings>("ConnectionStrings");
+            services.AddDbContext<WklsDbContext>(options => options.UseSqlServer(connStrings.WklsDbContext));
+
             // Add framework services.
             services.AddMvc()
                     .AddMvcOptions(o => o.Filters.Add(new RequireHttpsAttribute()))
