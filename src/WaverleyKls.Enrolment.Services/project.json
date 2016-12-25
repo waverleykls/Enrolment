@@ -1,8 +1,12 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
-    "WaverleyKls.Enrolment.EntityModels": "1.0.0-*"
+    "Newtonsoft.Json": "9.0.1",
+    "WaverleyKls.Enrolment.EntityModels": "1.0.0-*",
+    "WaverleyKls.Enrolment.Extensions": "1.0.0-*",
+    "WaverleyKls.Enrolment.Helpers": "1.0.0-*",
+    "WaverleyKls.Enrolment.ViewModels": "1.0.0-*"
   },
 
   "frameworks": {

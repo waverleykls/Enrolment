@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Aliencube.EntityFrameworkCore.Extensions;
+﻿using Aliencube.EntityFrameworkCore.Extensions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +6,7 @@ using WaverleyKls.Enrolment.EntityModels.Mapping;
 
 namespace WaverleyKls.Enrolment.EntityModels
 {
-    public class WklsDbContext : DbContext
+    public class WklsDbContext : DbContext, IWklsDbContext
     {
         public WklsDbContext() : base()
         {

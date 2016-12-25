@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WaverleyKls.Enrolment.Helpers;
+using WaverleyKls.Enrolment.Services.Interfaces;
 using WaverleyKls.Enrolment.ViewModels;
 
 namespace WaverleyKls.Enrolment.WebApp.Controllers
@@ -12,8 +13,9 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ICookieHelper _helper;
+        private readonly IStudentDetailsService _service;
 
-        public HomeController(ICookieHelper helper)
+        public HomeController(ICookieHelper helper, IStudentDetailsService service)
         {
             if (helper == null)
             {
@@ -21,6 +23,13 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             }
 
             this._helper = helper;
+
+            if (service == null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            this._service = service;
         }
 
         public IActionResult Index()
@@ -43,9 +52,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         {
             var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            var vm = new StudentDetailsViewModel();
+            var model = await this._service.GetStudentDetailsAsync(formId).ConfigureAwait(false) ??
+                        new StudentDetailsViewModel();
 
-            return this.View("StudentDetails", vm);
+            return this.View("StudentDetails", new StudentDetailsViewModel(model));
         }
 
         [Route("student-details")]
@@ -62,6 +72,8 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
 
             // TODO: If valid, save student details and move to the next screen.
             var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            await this._service.SetStudentDetailsAsync(formId, new StudentDetailsViewModel(model, false)).ConfigureAwait(false);
 
             return this.RedirectToAction("GetGuardianDetailsForm");
         }

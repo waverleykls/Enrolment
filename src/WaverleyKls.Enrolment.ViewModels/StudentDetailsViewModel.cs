@@ -13,44 +13,19 @@ namespace WaverleyKls.Enrolment.ViewModels
     {
         public StudentDetailsViewModel()
         {
-            this.Dates = DateTimeItemsGenerator.GetDates()
-                                               .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
-                                               .ToList();
-            this.Dates.Insert(0, new SelectListItem() { Text = "Date", Value = string.Empty });
-
-            this.Months = DateTimeItemsGenerator.GetMonths()
-                                                .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
-                                                .ToList();
-            this.Months.Insert(0, new SelectListItem() { Text = "Month", Value = string.Empty });
-
-            this.Years = DateTimeItemsGenerator.GetYears()
-                                               .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
-                                               .ToList();
-            this.Years.Insert(0, new SelectListItem() { Text = "Year", Value = string.Empty });
-
-            this.Genders = CommonItemsGenerator.GetGenders()
-                                               .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
-                                               .ToList();
-
-            this.States = CommonItemsGenerator.GetStates()
-                                              .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value, Selected = p.Value.Equals("VIC", StringComparison.CurrentCultureIgnoreCase) })
-                                              .ToList();
-
-            this.YearLevels = SchoolItemsGenerator.GetYearLevels()
-                                                  .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
-                                                  .ToList();
-            this.YearLevels.Insert(0, new SelectListItem() { Text = "Year Level", Value = string.Empty });
-
-            this.FeeSchemes = SchoolItemsGenerator.GetFeeSchemes()
-                                                  .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString().ToLowerInvariant(), Selected = !p.Value })
-                                                  .ToList();
+            this.Initialise();
         }
 
-        public StudentDetailsViewModel(StudentDetailsViewModel model) : this()
+        public StudentDetailsViewModel(StudentDetailsViewModel model, bool initialise = true)
         {
             if (model == null)
             {
                 return;
+            }
+
+            if (initialise)
+            {
+                this.Initialise();
             }
 
             this.FirstName = model.FirstName;
@@ -138,5 +113,40 @@ namespace WaverleyKls.Enrolment.ViewModels
 
         [Required]
         public bool IsDomestic { get; set; }
+
+        private void Initialise()
+        {
+            this.Dates = DateTimeItemsGenerator.GetDates()
+                                              .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
+                                              .ToList();
+            this.Dates.Insert(0, new SelectListItem() { Text = "Date", Value = string.Empty });
+
+            this.Months = DateTimeItemsGenerator.GetMonths()
+                                                .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
+                                                .ToList();
+            this.Months.Insert(0, new SelectListItem() { Text = "Month", Value = string.Empty });
+
+            this.Years = DateTimeItemsGenerator.GetYears()
+                                               .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
+                                               .ToList();
+            this.Years.Insert(0, new SelectListItem() { Text = "Year", Value = string.Empty });
+
+            this.Genders = CommonItemsGenerator.GetGenders()
+                                               .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
+                                               .ToList();
+
+            this.States = CommonItemsGenerator.GetStates()
+                                              .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value, Selected = p.Value.Equals("VIC", StringComparison.CurrentCultureIgnoreCase) })
+                                              .ToList();
+
+            this.YearLevels = SchoolItemsGenerator.GetYearLevels()
+                                                  .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
+                                                  .ToList();
+            this.YearLevels.Insert(0, new SelectListItem() { Text = "Year Level", Value = string.Empty });
+
+            this.FeeSchemes = SchoolItemsGenerator.GetFeeSchemes()
+                                                  .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString().ToLowerInvariant(), Selected = !p.Value })
+                                                  .ToList();
+        }
     }
 }

@@ -14,6 +14,8 @@ using Newtonsoft.Json.Serialization;
 
 using WaverleyKls.Enrolment.EntityModels;
 using WaverleyKls.Enrolment.Helpers;
+using WaverleyKls.Enrolment.Services;
+using WaverleyKls.Enrolment.Services.Interfaces;
 using WaverleyKls.Enrolment.WebApp.Settings;
 
 namespace WaverleyKls.Enrolment.WebApp
@@ -42,7 +44,7 @@ namespace WaverleyKls.Enrolment.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             var connStrings = Configuration.Get<ConnectionStringsSettings>("ConnectionStrings");
-            services.AddDbContext<WklsDbContext>(options => options.UseSqlServer(connStrings.WklsDbContext));
+            services.AddDbContext<WklsDbContext>(o => o.UseSqlServer(connStrings.WklsDbContext));
 
             // Add framework services.
             services.AddMvc()
@@ -56,7 +58,11 @@ namespace WaverleyKls.Enrolment.WebApp
                         o.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
                     });
 
+            services.AddScoped<IWklsDbContext>(p => p.GetService<WklsDbContext>());
+
             services.AddTransient<ICookieHelper, CookieHelper>();
+
+            services.AddTransient<IStudentDetailsService, StudentDetailsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
