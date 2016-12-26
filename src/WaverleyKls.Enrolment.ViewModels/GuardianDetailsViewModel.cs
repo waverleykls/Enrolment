@@ -8,20 +8,23 @@ using WaverleyKls.Enrolment.ViewModels.Generators;
 
 namespace WaverleyKls.Enrolment.ViewModels
 {
-    public class GuardianDetailsViewModel
+    public class GuardianDetailsViewModel : IInitialisable, ICloneable<GuardianDetailsViewModel>
     {
         public GuardianDetailsViewModel()
         {
-            this.Relationships = ContactItemsGenerator.GetRelationships()
-                                                      .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
-                                                      .ToList();
+            this.Initialise();
         }
 
-        public GuardianDetailsViewModel(GuardianDetailsViewModel model) : this()
+        private GuardianDetailsViewModel(GuardianDetailsViewModel model, bool initialise = true)
         {
             if (model == null)
             {
                 return;
+            }
+
+            if (initialise)
+            {
+                this.Initialise();
             }
 
             this.FirstName = model.FirstName;
@@ -66,5 +69,19 @@ namespace WaverleyKls.Enrolment.ViewModels
         public string Email { get; set; }
 
         public string Direction { get; set; }
+
+        public void Initialise()
+        {
+            this.Relationships = ContactItemsGenerator.GetRelationships()
+                                                      .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
+                                                      .ToList();
+        }
+
+        public GuardianDetailsViewModel Clone(bool initialise = true)
+        {
+            var vm = new GuardianDetailsViewModel(this, initialise);
+
+            return vm;
+        }
     }
 }

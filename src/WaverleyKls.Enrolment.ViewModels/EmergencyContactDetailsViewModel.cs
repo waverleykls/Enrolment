@@ -8,22 +8,23 @@ using WaverleyKls.Enrolment.ViewModels.Generators;
 
 namespace WaverleyKls.Enrolment.ViewModels
 {
-    public class EmergencyContactDetailsViewModel
+    public class EmergencyContactDetailsViewModel : IInitialisable, ICloneable<EmergencyContactDetailsViewModel>
     {
         public EmergencyContactDetailsViewModel()
         {
-            this.IsSameAsGuardianDetails = true;
-
-            this.Relationships = ContactItemsGenerator.GetRelationships()
-                                                      .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
-                                                      .ToList();
+            this.Initialise();
         }
 
-        public EmergencyContactDetailsViewModel(EmergencyContactDetailsViewModel model) : this()
+        private EmergencyContactDetailsViewModel(EmergencyContactDetailsViewModel model, bool initialise = true)
         {
             if (model == null)
             {
                 return;
+            }
+
+            if (initialise)
+            {
+                this.Initialise();
             }
 
             this.IsSameAsGuardianDetails = model.IsSameAsGuardianDetails;
@@ -72,5 +73,21 @@ namespace WaverleyKls.Enrolment.ViewModels
         public string Email { get; set; }
 
         public string Direction { get; set; }
+
+        public void Initialise()
+        {
+            this.IsSameAsGuardianDetails = true;
+
+            this.Relationships = ContactItemsGenerator.GetRelationships()
+                                                      .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value })
+                                                      .ToList();
+        }
+
+        public EmergencyContactDetailsViewModel Clone(bool initialise = true)
+        {
+            var vm = new EmergencyContactDetailsViewModel(this, initialise);
+
+            return vm;
+        }
     }
 }

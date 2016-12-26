@@ -9,14 +9,14 @@ using WaverleyKls.Enrolment.ViewModels.Generators;
 
 namespace WaverleyKls.Enrolment.ViewModels
 {
-    public class StudentDetailsViewModel
+    public class StudentDetailsViewModel : IInitialisable, ICloneable<StudentDetailsViewModel>
     {
         public StudentDetailsViewModel()
         {
             this.Initialise();
         }
 
-        public StudentDetailsViewModel(StudentDetailsViewModel model, bool initialise = true)
+        private StudentDetailsViewModel(StudentDetailsViewModel model, bool initialise = true)
         {
             if (model == null)
             {
@@ -114,7 +114,7 @@ namespace WaverleyKls.Enrolment.ViewModels
         [Required]
         public bool IsDomestic { get; set; }
 
-        private void Initialise()
+        public void Initialise()
         {
             this.Dates = DateTimeItemsGenerator.GetDates()
                                               .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
@@ -147,6 +147,13 @@ namespace WaverleyKls.Enrolment.ViewModels
             this.FeeSchemes = SchoolItemsGenerator.GetFeeSchemes()
                                                   .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString().ToLowerInvariant(), Selected = !p.Value })
                                                   .ToList();
+        }
+
+        public StudentDetailsViewModel Clone(bool initialise = true)
+        {
+            var vm = new StudentDetailsViewModel(this, initialise);
+
+            return vm;
         }
     }
 }

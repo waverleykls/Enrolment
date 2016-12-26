@@ -1,6 +1,10 @@
 {
   "version": "1.0.0-*",
 
+  "frameworks": {
+    "net461": {}
+  },
+
   "dependencies": {
     "Aliencube.EntityFrameworkCore.Extensions": "1.0.0.12",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.1",
@@ -12,10 +16,6 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     }
-  },
-
-  "frameworks": {
-    "net461": {}
   },
 
   "tools": {

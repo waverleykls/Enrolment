@@ -9,6 +9,6 @@ namespace WaverleyKls.Enrolment.Services.Interfaces
     {
         Task<StudentDetailsViewModel> GetStudentDetailsAsync(Guid formId);
 
-        Task SetStudentDetailsAsync(Guid formId, StudentDetailsViewModel model);
+        Task<Guid> SaveStudentDetailsAsync(Guid formId, StudentDetailsViewModel model);
     }
 }

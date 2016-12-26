@@ -12,13 +12,13 @@ using WaverleyKls.Enrolment.ViewModels;
 
 namespace WaverleyKls.Enrolment.Services
 {
-    public class StudentDetailsService : IStudentDetailsService
+    public class GuardianConsentsService : IGuardianConsentsService
     {
         private readonly IWklsDbContext _context;
 
         private bool _disposed;
 
-        public StudentDetailsService(IWklsDbContext context)
+        public GuardianConsentsService(IWklsDbContext context)
         {
             if (context == null)
             {
@@ -28,7 +28,7 @@ namespace WaverleyKls.Enrolment.Services
             this._context = context;
         }
 
-        public async Task<StudentDetailsViewModel> GetStudentDetailsAsync(Guid formId)
+        public async Task<GuardianConsentsViewModel> GetGuardianConsentsAsync(Guid formId)
         {
             if (formId == Guid.Empty)
             {
@@ -41,17 +41,17 @@ namespace WaverleyKls.Enrolment.Services
                 return null;
             }
 
-            if (form.StudentDetails.IsNullOrWhiteSpace())
+            if (form.GuardianConsents.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            var model = JsonConvert.DeserializeObject<StudentDetailsViewModel>(form.StudentDetails);
+            var model = JsonConvert.DeserializeObject<GuardianConsentsViewModel>(form.GuardianConsents);
 
             return model;
         }
 
-        public async Task<Guid> SaveStudentDetailsAsync(Guid formId, StudentDetailsViewModel model)
+        public async Task<Guid> SaveGuardianConsentsAsync(Guid formId, GuardianConsentsViewModel model)
         {
             if (formId == Guid.Empty)
             {
@@ -63,7 +63,7 @@ namespace WaverleyKls.Enrolment.Services
                 throw new ArgumentNullException(nameof(model));
             }
 
-            var form = await this.AddOrUpdateStudentDetailsAsync(formId, model).ConfigureAwait(false);
+            var form = await this.AddOrUpdateGuardianConsentsAsync(formId, model).ConfigureAwait(false);
 
             var transaction = await this._context.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
@@ -93,7 +93,7 @@ namespace WaverleyKls.Enrolment.Services
             this._disposed = true;
         }
 
-        private async Task<EnrolmentForm> AddOrUpdateStudentDetailsAsync(Guid formId, StudentDetailsViewModel model)
+        private async Task<EnrolmentForm> AddOrUpdateGuardianConsentsAsync(Guid formId, GuardianConsentsViewModel model)
         {
             var now = DateTimeOffset.UtcNow;
 
@@ -103,7 +103,7 @@ namespace WaverleyKls.Enrolment.Services
                 form = new EnrolmentForm() { FormId = formId, DateCreated = now };
             }
 
-            form.StudentDetails = JsonConvert.SerializeObject(model);
+            form.GuardianConsents = JsonConvert.SerializeObject(model);
             form.DateUpdated = now;
 
             this._context.AddOrUpdate(form);

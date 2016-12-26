@@ -12,23 +12,23 @@
 
             var toggleAllElements = function(flag) {
                 if (flag) {
-                    $("#FirstName").attr("disabled", "disabled");
-                    $("#MiddleNames").attr("disabled", "disabled");
-                    $("#LastName").attr("disabled", "disabled");
-                    $("input[name='RelationshipToStudent']").attr("disabled", "disabled");
-                    $("#HomePhone").attr("disabled", "disabled");
-                    $("#WorkPhone").attr("disabled", "disabled");
-                    $("#MobilePhone").attr("disabled", "disabled");
-                    $("#Email").attr("disabled", "disabled");
+                    $("#FirstName").attr("readonly", "readonly");
+                    $("#MiddleNames").attr("readonly", "readonly");
+                    $("#LastName").attr("readonly", "readonly");
+                    $("input[name='RelationshipToStudent']").attr("readonly", "readonly");
+                    $("#HomePhone").attr("readonly", "readonly");
+                    $("#WorkPhone").attr("readonly", "readonly");
+                    $("#MobilePhone").attr("readonly", "readonly");
+                    $("#Email").attr("readonly", "readonly");
                 } else {
-                    $("#FirstName").removeAttr("disabled");
-                    $("#MiddleNames").removeAttr("disabled");
-                    $("#LastName").removeAttr("disabled");
-                    $("input[name='RelationshipToStudent']").removeAttr("disabled");
-                    $("#HomePhone").removeAttr("disabled");
-                    $("#WorkPhone").removeAttr("disabled");
-                    $("#MobilePhone").removeAttr("disabled");
-                    $("#Email").removeAttr("disabled");
+                    $("#FirstName").removeAttr("readonly");
+                    $("#MiddleNames").removeAttr("readonly");
+                    $("#LastName").removeAttr("readonly");
+                    $("input[name='RelationshipToStudent']").removeAttr("readonly");
+                    $("#HomePhone").removeAttr("readonly");
+                    $("#WorkPhone").removeAttr("readonly");
+                    $("#MobilePhone").removeAttr("readonly");
+                    $("#Email").removeAttr("readonly");
                 }
             }
 

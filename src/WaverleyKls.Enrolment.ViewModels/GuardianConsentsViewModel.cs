@@ -2,14 +2,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WaverleyKls.Enrolment.ViewModels
 {
-    public class GuardianConsentsViewModel
+    public class GuardianConsentsViewModel : IInitialisable, ICloneable<GuardianConsentsViewModel>
     {
         public GuardianConsentsViewModel()
         {
+            this.Initialise();
         }
 
-        public GuardianConsentsViewModel(GuardianConsentsViewModel model) : this()
+        private GuardianConsentsViewModel(GuardianConsentsViewModel model, bool initialise = true)
         {
+            if (model == null)
+            {
+                return;
+            }
+
+            if (initialise)
+            {
+                this.Initialise();
+            }
+
             this.AgreeToc = model.AgreeToc;
             this.AgreePhoto = model.AgreePhoto;
             this.AgreeSms = model.AgreeSms;
@@ -30,5 +41,15 @@ namespace WaverleyKls.Enrolment.ViewModels
         public bool AgreeKakaoTalk { get; set; }
         public string Comments { get; set; }
         public string Direction { get; set; }
+        public void Initialise()
+        {
+        }
+
+        public GuardianConsentsViewModel Clone(bool initialise = true)
+        {
+            var vm = new GuardianConsentsViewModel(this, initialise);
+
+            return vm;
+        }
     }
 }

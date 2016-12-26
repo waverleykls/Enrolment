@@ -16,6 +16,7 @@ using WaverleyKls.Enrolment.EntityModels;
 using WaverleyKls.Enrolment.Helpers;
 using WaverleyKls.Enrolment.Services;
 using WaverleyKls.Enrolment.Services.Interfaces;
+using WaverleyKls.Enrolment.WebApp.Contexts;
 using WaverleyKls.Enrolment.WebApp.Settings;
 
 namespace WaverleyKls.Enrolment.WebApp
@@ -63,6 +64,12 @@ namespace WaverleyKls.Enrolment.WebApp
             services.AddTransient<ICookieHelper, CookieHelper>();
 
             services.AddTransient<IStudentDetailsService, StudentDetailsService>();
+            services.AddTransient<IGuardianDetailsService, GuardianDetailsService>();
+            services.AddTransient<IEmergencyContactDetailsService, EmergencyContactDetailsService>();
+            services.AddTransient<IMedicalDetailsService, MedicalDetailsService>();
+            services.AddTransient<IGuardianConsentsService, GuardianConsentsService>();
+
+            services.AddTransient<IEnrolmentContext, EnrolmentContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

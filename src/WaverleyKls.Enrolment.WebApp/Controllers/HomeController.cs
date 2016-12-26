@@ -3,33 +3,24 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
-using WaverleyKls.Enrolment.Helpers;
-using WaverleyKls.Enrolment.Services.Interfaces;
 using WaverleyKls.Enrolment.ViewModels;
+using WaverleyKls.Enrolment.WebApp.Contexts;
 
 namespace WaverleyKls.Enrolment.WebApp.Controllers
 {
     [Route("")]
     public class HomeController : Controller
     {
-        private readonly ICookieHelper _helper;
-        private readonly IStudentDetailsService _service;
+        private readonly IEnrolmentContext _context;
 
-        public HomeController(ICookieHelper helper, IStudentDetailsService service)
+        public HomeController(IEnrolmentContext context)
         {
-            if (helper == null)
+            if (context == null)
             {
-                throw new ArgumentNullException(nameof(helper));
+                throw new ArgumentNullException(nameof(context));
             }
 
-            this._helper = helper;
-
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
-
-            this._service = service;
+            this._context = context;
         }
 
         public IActionResult Index()
@@ -41,7 +32,7 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> ClearEnrolmentForm()
         {
-            await this._helper.ClearFormIdAsync(this).ConfigureAwait(false);
+            await this._context.CookieHelper.ClearFormIdAsync(this).ConfigureAwait(false);
 
             return this.RedirectToAction("GetStudentDetailsForm");
         }
@@ -50,12 +41,12 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetStudentDetailsForm()
         {
-            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            var model = await this._service.GetStudentDetailsAsync(formId).ConfigureAwait(false) ??
+            var model = await this._context.StudentDetailsService.GetStudentDetailsAsync(formId).ConfigureAwait(false) ??
                         new StudentDetailsViewModel();
 
-            return this.View("StudentDetails", new StudentDetailsViewModel(model));
+            return this.View("StudentDetails", model.Clone());
         }
 
         [Route("student-details")]
@@ -63,28 +54,36 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetStudentDetails(StudentDetailsViewModel model)
         {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
-                var vm = new StudentDetailsViewModel(model);
+                var vm = model.Clone();
 
                 return this.View("StudentDetails", vm);
             }
 
             // TODO: If valid, save student details and move to the next screen.
-            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            await this._service.SetStudentDetailsAsync(formId, new StudentDetailsViewModel(model, false)).ConfigureAwait(false);
+            await this._context.StudentDetailsService.SaveStudentDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             return this.RedirectToAction("GetGuardianDetailsForm");
         }
 
         [Route("guardian-details")]
         [HttpGet]
-        public IActionResult GetGuardianDetailsForm()
+        public async Task<IActionResult> GetGuardianDetailsForm()
         {
-            var vm = new GuardianDetailsViewModel();
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            return this.View("GuardianDetails", vm);
+            var model = await this._context.GuardianDetailsService.GetGuardianDetailsAsync(formId).ConfigureAwait(false) ??
+                        new GuardianDetailsViewModel();
+
+            return this.View("GuardianDetails", model.Clone());
         }
 
         [Route("guardian-details")]
@@ -92,15 +91,22 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetGuardianDetails(GuardianDetailsViewModel model)
         {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
-                var vm = new GuardianDetailsViewModel(model);
+                var vm = model.Clone();
 
                 return this.View("GuardianDetails", vm);
             }
 
             // TODO: If valid, save guardian details and move to the next screen.
-            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            await this._context.GuardianDetailsService.SaveGuardianDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
                                  ? "GetStudentDetailsForm"
@@ -111,11 +117,16 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
 
         [Route("emergency-contact-details")]
         [HttpGet]
-        public IActionResult GetEmergencyContactDetailsForm()
+        public async Task<IActionResult> GetEmergencyContactDetailsForm()
         {
-            var vm = new EmergencyContactDetailsViewModel();
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            return this.View("EmergencyContactDetails", vm);
+            var model = await this._context.EmergencyContactDetailsService.GetEmergencyContactDetailsAsync(formId).ConfigureAwait(false) ??
+                        new EmergencyContactDetailsViewModel();
+
+            model = await this._context.EmergencyContactDetailsService.MergeGuardianDetailsAsync(formId, model).ConfigureAwait(false);
+
+            return this.View("EmergencyContactDetails", model.Clone());
         }
 
         [Route("emergency-contact-details")]
@@ -128,38 +139,34 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                 return this.BadRequest();
             }
 
-            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
-
-            var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
-                                 ? "GetGuardianDetailsForm"
-                                 : "GetMedicalDetailsForm";
-
-            if (model.IsSameAsGuardianDetails)
-            {
-                // TODO: Use parent/guardian details for emergency contact details.
-
-                return this.RedirectToAction(actionName);
-            }
-
             if (!ModelState.IsValid)
             {
-                var vm = new EmergencyContactDetailsViewModel(model);
+                var vm = model.Clone();
 
                 return this.View("EmergencyContactDetails", vm);
             }
 
-            // TODO: If valid, save guardian details and move to the next screen.
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            await this._context.EmergencyContactDetailsService.SaveEmergencyContactDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
+
+            var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
+                                 ? "GetGuardianDetailsForm"
+                                 : "GetMedicalDetailsForm";
 
             return this.RedirectToAction(actionName);
         }
 
         [Route("medical-details")]
         [HttpGet]
-        public IActionResult GetMedicalDetailsForm()
+        public async Task<IActionResult> GetMedicalDetailsForm()
         {
-            var vm = new MedicalDetailsViewModel();
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            return this.View("MedicalDetails", vm);
+            var model = await this._context.MedicalDetailsService.GetMedicalDetailsAsync(formId).ConfigureAwait(false) ??
+                        new MedicalDetailsViewModel();
+
+            return this.View("MedicalDetails", model.Clone());
         }
 
         [Route("medical-details")]
@@ -167,30 +174,40 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetMedicalDetails(MedicalDetailsViewModel model)
         {
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
-                var vm = new MedicalDetailsViewModel(model);
+                var vm = model.Clone();
 
                 return this.View("MedicalDetails", vm);
             }
 
             // TODO: If valid, save guardian details and move to the next screen.
-            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            await this._context.MedicalDetailsService.SaveMedicalDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
                                  ? "GetEmergencyContactDetailsForm"
-                                 : "GetGuardianConsentForm";
+                                 : "GetGuardianConsentsForm";
 
             return this.RedirectToAction(actionName);
         }
 
         [Route("guardian-consents")]
         [HttpGet]
-        public IActionResult GetGuardianConsentsForm()
+        public async Task<IActionResult> GetGuardianConsentsForm()
         {
-            var vm = new GuardianConsentsViewModel();
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
-            return this.View("GuardianConsents", vm);
+            var model = await this._context.GuardianConsentsService.GetGuardianConsentsAsync(formId).ConfigureAwait(false) ??
+                        new GuardianConsentsViewModel();
+
+            return this.View("GuardianConsents", model.Clone());
         }
 
         [Route("guardian-consents")]
@@ -198,6 +215,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetGuardianConsents(GuardianConsentsViewModel model)
         {
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
             if (!model.AgreeToc || !model.AgreePhoto || !model.AgreeSms || !model.AgreeKakaoTalk)
             {
                 ModelState.AddModelError("AgreeToc", "ToC must be ticked");
@@ -205,13 +227,15 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
 
             if (!ModelState.IsValid)
             {
-                var vm = new GuardianConsentsViewModel(model);
+                var vm = model.Clone();
 
                 return this.View("GuardianConsents", vm);
             }
 
             // TODO: If valid, save guardian details and move to the next screen.
-            var formId = await this._helper.GetFormIdAsync(this).ConfigureAwait(false);
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            await this._context.GuardianConsentsService.SaveGuardianConsentsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
                                  ? "GetMedicalDetailsForm"
