@@ -3,6 +3,25 @@
     ViewData["Title"] = "Parent/Guardian Declaration and Agreement";
 }
 
+@section scripts
+{
+    <script>
+        "use strict";
+
+        (function($) {
+            var $labels = $(".checkbox-label");
+            $.each($labels, function (i, label) {
+                var $label = $(label);
+                if ($label.has(".input-validation-error").length) {
+                    $label.parent().addClass("has-error");
+                } else {
+                    $label.parent().removeClass("has-error");
+                }
+            });
+        })(jQuery);
+    </script>
+}
+
 <div class="row">
     <h2>Parent/Guardian Declaration and Agreement</h2>
 
@@ -24,7 +43,7 @@
         </div>
         <div class="form-group">
             <div class="checkbox">
-                <label asp-for="AgreeToc">
+                <label class="checkbox-label">
                     <input asp-for="AgreeToc" />
                     Yes, I agree with the statement above.
                 </label>
@@ -38,7 +57,7 @@
         </div>
         <div class="form-group">
             <div class="checkbox">
-                <label>
+                <label class="checkbox-label">
                     <input asp-for="AgreePhoto" />
                     Yes, I agree with the statement above.
                 </label>
@@ -52,7 +71,7 @@
         </div>
         <div class="form-group">
             <div class="checkbox">
-                <label>
+                <label class="checkbox-label">
                     <input asp-for="AgreeSms" />
                     Yes, I agree with the statement above.
                 </label>
@@ -66,7 +85,7 @@
         </div>
         <div class="form-group">
             <div class="checkbox">
-                <label>
+                <label class="checkbox-label">
                     <input asp-for="AgreeKakaoTalk" />
                     Yes, I agree with the statement above.
                 </label>

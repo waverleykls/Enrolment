@@ -1,0 +1,108 @@
+﻿@using WaverleyKls.Enrolment.Extensions
+@model WaverleyKls.Enrolment.ViewModels.ConfirmationViewModel
+@{
+    ViewData["Title"] = "Confirmation";
+
+    var sd = Model.StudentDetails;
+    var gd = Model.GuardianDetails;
+    var ecd = Model.EmergencyContactDetails;
+    var md = Model.MedicalDetails;
+    var gc = Model.GuardianConsents;
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <h2>Student Details</h2>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul>
+                    <li>Name: @($"{sd.FirstName} {sd.MiddleNames} {sd.LastName}")</li>
+                    <li>Date of Birth: @($"{sd.Date}/{sd.Month}/{sd.Year}")</li>
+                    <li>Gender: @sd.Gender</li>
+                    <li>School: @sd.SchoolName</li>
+                    <li>Year: @sd.YearLevel</li>
+                    <li>Address: @($"{sd.Address1} {sd.Address2} {sd.Suburb} {sd.State} {sd.Postcode}")</li>
+                    <li>Residential Status: @(sd.IsDomestic ? "Australian Citizen or Permanent Resident" : "Full-fee Paying or International Student")</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <h2>Parent/Guardian Details</h2>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul>
+                    <li>Name: @($"{gd.FirstName} {gd.MiddleNames} {gd.LastName}")</li>
+                    <li>Relationship to Student: @gd.RelationshipToStudent</li>
+                    <li>Home: @gd.HomePhone</li>
+                    <li>Work: @gd.WorkPhone</li>
+                    <li>Mobile: @gd.MobilePhone</li>
+                    <li>Email: @gd.Email</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <h2>Emergency Contact Details</h2>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul>
+                    <li>Name: @($"{ecd.FirstName} {ecd.MiddleNames} {ecd.LastName}")</li>
+                    <li>Relationship to Student: @ecd.RelationshipToStudent</li>
+                    <li>Home: @ecd.HomePhone</li>
+                    <li>Work: @ecd.WorkPhone</li>
+                    <li>Mobile: @ecd.MobilePhone</li>
+                    <li>Email: @ecd.Email</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <h2>Medical Details</h2>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul>
+                    <li>
+                        Student has medical conditions: @(md.HasAnyMedicalConcern ? "Yes" : "No")
+                        @if (md.HasAnyMedicalConcern)
+                        {
+                            <blockquote>@md.MedicalConcernDetails</blockquote>
+                        }
+                    </li>
+                    <li>
+                        Student takes medication: @(md.IsTakingMedication ? "Yes" : "No")
+                        @if (md.IsTakingMedication)
+                        {
+                            <blockquote>@md.MedicationDetails</blockquote>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <h2>Parent/Guardian Agreement</h2>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul>
+                    <li>Parent/Guardian has agreed with the school terms and conditions.</li>
+                    <li>Parent/Guardian has agreed with the school photo policy.</li>
+                    <li>Parent/Guardian has agreed with the school SMS policy.</li>
+                    <li>Parent/Guardian has agreed with the school KakaoTalk Policy.</li>
+                    <li>
+                        Parent/Guardian has comments: @(!gc.Comments.IsNullOrWhiteSpace() ? "Yes" : "No")
+                        @if (!gc.Comments.IsNullOrWhiteSpace())
+                        {
+                            <blockquote>@gc.Comments</blockquote>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <form class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-horizontal" asp-controller="Home" asp-action="SubmitEnrolment" method="post">
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-default" name="Direction" value="prev">&lt;&lt; Prev</button>
+            <a class="btn btn-warning" asp-controller="Home" asp-action="ClearEnrolmentForm">Start Over</a>
+            <button type="submit" class="btn btn-primary" name="Direction" value="next">Submit &gt;&gt;</button>
+        </div>
+    </form>
+</div>

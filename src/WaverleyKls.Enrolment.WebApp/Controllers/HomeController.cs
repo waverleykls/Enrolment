@@ -11,6 +11,20 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
     [Route("")]
     public class HomeController : Controller
     {
+        private const string StartOverGet = "ClearEnrolmentForm";
+        private const string StudentDetailsGet = "GetStudentDetailsForm";
+        private const string StudentDetailsPost = "SetStudentDetails";
+        private const string GuardianDetailsGet = "GetGuardianDetailsForm";
+        private const string GuardianDetailsPost = "SetGuardianDetails";
+        private const string EmergencyContactDetailsGet = "GetEmergencyContactDetailsForm";
+        private const string EmergencyContactDetailsPost = "SetEmergencyContactDetails";
+        private const string MedicalDetailsGet = "GetMedicalDetailsForm";
+        private const string MedicalDetailsPost = "SetMedicalDetails";
+        private const string GuardianConsentsGet = "GetGuardianConsentsForm";
+        private const string GuardianConsentsPost = "SetGuardianConsents";
+        private const string ConfirmationGet = "GetConfirmation";
+        private const string ThankyouGet = "GetThankyou";
+
         private readonly IEnrolmentContext _context;
 
         public HomeController(IEnrolmentContext context)
@@ -34,7 +48,7 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         {
             await this._context.CookieHelper.ClearFormIdAsync(this).ConfigureAwait(false);
 
-            return this.RedirectToAction("GetStudentDetailsForm");
+            return this.RedirectToAction(StudentDetailsGet);
         }
 
         [Route("student-details")]
@@ -66,12 +80,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                 return this.View("StudentDetails", vm);
             }
 
-            // TODO: If valid, save student details and move to the next screen.
             var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
             await this._context.StudentDetailsService.SaveStudentDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
-            return this.RedirectToAction("GetGuardianDetailsForm");
+            return this.RedirectToAction(GuardianDetailsGet);
         }
 
         [Route("guardian-details")]
@@ -103,14 +116,13 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                 return this.View("GuardianDetails", vm);
             }
 
-            // TODO: If valid, save guardian details and move to the next screen.
             var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
             await this._context.GuardianDetailsService.SaveGuardianDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
-                                 ? "GetStudentDetailsForm"
-                                 : "GetEmergencyContactDetailsForm";
+                                 ? StudentDetailsGet
+                                 : EmergencyContactDetailsGet;
 
             return this.RedirectToAction(actionName);
         }
@@ -151,8 +163,8 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             await this._context.EmergencyContactDetailsService.SaveEmergencyContactDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
-                                 ? "GetGuardianDetailsForm"
-                                 : "GetMedicalDetailsForm";
+                                 ? GuardianDetailsGet
+                                 : MedicalDetailsGet;
 
             return this.RedirectToAction(actionName);
         }
@@ -186,14 +198,13 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                 return this.View("MedicalDetails", vm);
             }
 
-            // TODO: If valid, save guardian details and move to the next screen.
             var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
             await this._context.MedicalDetailsService.SaveMedicalDetailsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
-                                 ? "GetEmergencyContactDetailsForm"
-                                 : "GetGuardianConsentsForm";
+                                 ? EmergencyContactDetailsGet
+                                 : GuardianConsentsGet;
 
             return this.RedirectToAction(actionName);
         }
@@ -220,10 +231,7 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                 return this.BadRequest();
             }
 
-            if (!model.AgreeToc || !model.AgreePhoto || !model.AgreeSms || !model.AgreeKakaoTalk)
-            {
-                ModelState.AddModelError("AgreeToc", "ToC must be ticked");
-            }
+            this.CheckGuardianConsentsTicked(model);
 
             if (!ModelState.IsValid)
             {
@@ -232,16 +240,89 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                 return this.View("GuardianConsents", vm);
             }
 
-            // TODO: If valid, save guardian details and move to the next screen.
             var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
             await this._context.GuardianConsentsService.SaveGuardianConsentsAsync(formId, model.Clone(false)).ConfigureAwait(false);
 
             var actionName = model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase)
-                                 ? "GetMedicalDetailsForm"
-                                 : "GetConfirmation";
+                                 ? MedicalDetailsGet
+                                 : ConfirmationGet;
 
             return this.RedirectToAction(actionName);
+        }
+
+        [Route("confirmation")]
+        [HttpGet]
+        public async Task<IActionResult> GetConfirmation()
+        {
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            var vm = new ConfirmationViewModel()
+                     {
+                         StudentDetails = await this._context.StudentDetailsService.GetStudentDetailsAsync(formId).ConfigureAwait(false),
+                         GuardianDetails = await this._context.GuardianDetailsService.GetGuardianDetailsAsync(formId).ConfigureAwait(false),
+                         EmergencyContactDetails = await this._context.EmergencyContactDetailsService.GetEmergencyContactDetailsAsync(formId).ConfigureAwait(false),
+                         MedicalDetails = await this._context.MedicalDetailsService.GetMedicalDetailsAsync(formId).ConfigureAwait(false),
+                         GuardianConsents = await this._context.GuardianConsentsService.GetGuardianConsentsAsync(formId).ConfigureAwait(false),
+                     };
+
+            return this.View("GetConfirmation", vm);
+        }
+
+        [Route("submit")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitEnrolment(ConfirmationViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            if (model.Direction.Equals("prev", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return this.RedirectToAction(GuardianConsentsGet);
+            }
+
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            return this.RedirectToAction(ThankyouGet);
+        }
+
+        [Route("thankyou")]
+        [HttpGet]
+        public async Task<IActionResult> GetThankyou()
+        {
+            var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
+
+            await this._context.CookieHelper.ClearFormIdAsync(this).ConfigureAwait(false);
+
+            var vm = new ThankyouViewModel() { ReferenceNumber = "WKLS201701001", Email = "jane.doe@email.com" };
+
+            return this.View("GetThankyou", vm);
+        }
+
+        private void CheckGuardianConsentsTicked(GuardianConsentsViewModel model)
+        {
+            if (!model.AgreeToc)
+            {
+                ModelState.AddModelError("AgreeToc", "ToC must be ticked");
+            }
+
+            if (!model.AgreePhoto)
+            {
+                ModelState.AddModelError("AgreePhoto", "Photo must be ticked");
+            }
+
+            if (!model.AgreeSms)
+            {
+                ModelState.AddModelError("AgreeSms", "SMS must be ticked");
+            }
+
+            if (!model.AgreeKakaoTalk)
+            {
+                ModelState.AddModelError("AgreeKakaoTalk", "KakaoTalk must be ticked");
+            }
         }
     }
 }
