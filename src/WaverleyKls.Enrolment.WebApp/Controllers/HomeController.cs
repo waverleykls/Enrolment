@@ -286,6 +286,52 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
 
             var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
+            var sd = await this._context.StudentDetailsService.GetStudentDetailsAsync(formId).ConfigureAwait(false);
+            var gd = await this._context.GuardianDetailsService.GetGuardianDetailsAsync(formId).ConfigureAwait(false);
+
+            var amount = 95.00M;
+
+            var template = await this._context.SendGridMailService.GetEmailTemplateAsync("SubmissionConfirmation").ConfigureAwait(false);
+
+            var vm = new EmailViewModel()
+                     {
+                         Personalizations =
+                         {
+                             new Personalisation()
+                             {
+                                 To =
+                                 {
+                                     new MailAddress()
+                                     {
+                                         Name = $"{gd.FirstName} {gd.LastName}",
+                                         Email = gd.Email
+                                     }
+                                 }
+                             }
+                         },
+                         Subject = template.Subject.Replace(":name", $"{sd.FirstName} {sd.LastName}"),
+                         Content =
+                         {
+                             new Content()
+                             {
+                                 Type = "text/plain",
+                                 Value =
+                                     template.PlainContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
+                                             .Replace(":referenceNumber", string.Empty)
+                                             .Replace(":amount", amount.ToString("F2"))
+                             },
+                             new Content()
+                             {
+                                 Type = "text/html",
+                                 Value =
+                                     template.HtmlContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
+                                             .Replace(":referenceNumber", string.Empty)
+                                             .Replace(":amount", amount.ToString("F2"))
+                             },
+                         }
+            };
+            await this._context.SendGridMailService.SendAsync(vm).ConfigureAwait(false);
+
             return this.RedirectToAction(ThankyouGet);
         }
 

@@ -18,6 +18,8 @@ namespace WaverleyKls.Enrolment.EntityModels
 
         public DbSet<EnrolmentForm> EnrolmentForms { get; set; }
 
+        public DbSet<Payment> Payments { get; set; }
+
         /// <summary>
         /// Called while entity models are created.
         /// </summary>
@@ -25,6 +27,7 @@ namespace WaverleyKls.Enrolment.EntityModels
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<EnrolmentForm>().Map(new EnrolmentFormMap());
+            builder.Entity<Payment>().Map(new PaymentMap());
         }
     }
 }

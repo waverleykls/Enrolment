@@ -14,7 +14,8 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
                                 IGuardianDetailsService guardianDetailsService,
                                 IEmergencyContactDetailsService emergencyContactDetailsService,
                                 IMedicalDetailsService medicalDetailsService,
-                                IGuardianConsentsService guardianConsentsService)
+                                IGuardianConsentsService guardianConsentsService,
+                                ISendGridMailService sendGridMailService)
         {
             if (cookieHelper == null)
             {
@@ -57,6 +58,13 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
             }
 
             this.GuardianConsentsService = guardianConsentsService;
+
+            if (sendGridMailService == null)
+            {
+                throw new ArgumentNullException(nameof(sendGridMailService));
+            }
+
+            this.SendGridMailService = sendGridMailService;
         }
         public ICookieHelper CookieHelper { get; }
 
@@ -69,6 +77,8 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
         public IMedicalDetailsService MedicalDetailsService { get; }
 
         public IGuardianConsentsService GuardianConsentsService { get; }
+
+        public ISendGridMailService SendGridMailService { get; }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

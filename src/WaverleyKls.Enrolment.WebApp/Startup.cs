@@ -16,6 +16,7 @@ using WaverleyKls.Enrolment.EntityModels;
 using WaverleyKls.Enrolment.Helpers;
 using WaverleyKls.Enrolment.Services;
 using WaverleyKls.Enrolment.Services.Interfaces;
+using WaverleyKls.Enrolment.Settings;
 using WaverleyKls.Enrolment.WebApp.Contexts;
 using WaverleyKls.Enrolment.WebApp.Settings;
 
@@ -44,10 +45,9 @@ namespace WaverleyKls.Enrolment.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connStrings = Configuration.Get<ConnectionStringsSettings>("ConnectionStrings");
+            var connStrings = Configuration.Get<ConnectionStringsSettings>("connectionStrings");
             services.AddDbContext<WklsDbContext>(o => o.UseSqlServer(connStrings.WklsDbContext));
 
-            // Add framework services.
             services.AddMvc()
                     .AddMvcOptions(o => o.Filters.Add(new RequireHttpsAttribute()))
                     .AddJsonOptions(o =>
@@ -57,9 +57,24 @@ namespace WaverleyKls.Enrolment.WebApp
                         o.SerializerSettings.Formatting = Formatting.Indented;
                         o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                         o.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+                        o.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     });
 
             services.AddScoped<IWklsDbContext>(p => p.GetService<WklsDbContext>());
+
+            var sendGrid = Configuration.Get<SendGridSettings>("sendGrid");
+            services.AddSingleton<SendGridSettings>(sendGrid);
+
+            var jsonSerialiserSettings = new JsonSerializerSettings()
+                                         {
+                                             ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                                             Converters = { new StringEnumConverter() },
+                                             Formatting = Formatting.Indented,
+                                             NullValueHandling = NullValueHandling.Ignore,
+                                             MissingMemberHandling = MissingMemberHandling.Ignore,
+                                             DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                                         };
+            services.AddSingleton<JsonSerializerSettings>(jsonSerialiserSettings);
 
             services.AddTransient<ICookieHelper, CookieHelper>();
 
@@ -68,6 +83,7 @@ namespace WaverleyKls.Enrolment.WebApp
             services.AddTransient<IEmergencyContactDetailsService, EmergencyContactDetailsService>();
             services.AddTransient<IMedicalDetailsService, MedicalDetailsService>();
             services.AddTransient<IGuardianConsentsService, GuardianConsentsService>();
+            services.AddTransient<ISendGridMailService, SendGridMailService>();
 
             services.AddTransient<IEnrolmentContext, EnrolmentContext>();
         }
@@ -75,7 +91,7 @@ namespace WaverleyKls.Enrolment.WebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddConsole(Configuration.GetSection("logging"));
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment())

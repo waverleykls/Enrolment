@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace WaverleyKls.Enrolment.EntityModels
 {
@@ -12,5 +13,7 @@ namespace WaverleyKls.Enrolment.EntityModels
         public string GuardianConsents { get; set; }
         public DateTimeOffset DateCreated { get; set; }
         public DateTimeOffset DateUpdated { get; set; }
+
+        public virtual List<Payment> Payments { get; set; }
     }
 }

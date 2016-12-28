@@ -13,5 +13,7 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
         IEmergencyContactDetailsService EmergencyContactDetailsService { get; }
         IMedicalDetailsService MedicalDetailsService { get; }
         IGuardianConsentsService GuardianConsentsService { get; }
+
+        ISendGridMailService SendGridMailService { get; }
     }
 }
