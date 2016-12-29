@@ -9,6 +9,9 @@ using WaverleyKls.Enrolment.Services.Interfaces;
 
 namespace WaverleyKls.Enrolment.Services
 {
+    /// <summary>
+    /// This represents the service entity for payment.
+    /// </summary>
     public class PaymentService : IPaymentService
     {
         private const decimal KinderAmount = 300.00M;
@@ -24,6 +27,11 @@ namespace WaverleyKls.Enrolment.Services
 
         private bool _disposed;
 
+        /// <summary>
+        /// Initialises a new instance of the <see cref="MedicalDetailsService"/> class.
+        /// </summary>
+        /// <param name="context"><see cref="IWklsDbContext"/> instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null" />.</exception>
         public PaymentService(IWklsDbContext context)
         {
             if (context == null)
@@ -34,18 +42,17 @@ namespace WaverleyKls.Enrolment.Services
             this._context = context;
         }
 
-        public async Task<decimal> GetAmountAsync(bool isDomestic, string yearLevel, DateTimeOffset now)
-        {
-            var amount = await Task.Factory.StartNew(() => GetAmount(isDomestic, yearLevel, now)).ConfigureAwait(false);
-
-            return amount;
-        }
-
+        /// <summary>
+        /// Gets the reference number based on the enrolment for Id.
+        /// </summary>
+        /// <param name="formId">Enrolment form Id.</param>
+        /// <returns>Returns the reference number.</returns>
+        /// <exception cref="ArgumentException">Invalid enrolment form Id.</exception>
         public async Task<string> GetReferenceNumberByFormIdAsync(Guid formId)
         {
             if (formId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(formId));
+                throw new ArgumentException("Invalid enrolment form Id", nameof(formId));
             }
 
             var payment = await this._context.Payments.SingleOrDefaultAsync(p => p.FormId == formId).ConfigureAwait(false);
@@ -53,16 +60,44 @@ namespace WaverleyKls.Enrolment.Services
             return payment?.ReferenceNumber;
         }
 
+        /// <summary>
+        /// Gets the payment amount based on residential status, year level and date of submission.
+        /// </summary>
+        /// <param name="isDomestic">Value to specify whether the student applies domestic fee or not.</param>
+        /// <param name="yearLevel">Student's year level.</param>
+        /// <param name="now">Date of submission.</param>
+        /// <returns>Returns the payment amount.</returns>
+        /// <exception cref="ArgumentException">Invalid year level.</exception>
+        public async Task<decimal> GetAmountAsync(bool isDomestic, string yearLevel, DateTimeOffset now)
+        {
+            if (!IsValidYearLevel(yearLevel))
+            {
+                throw new ArgumentException("Invalid year level", nameof(yearLevel));
+            }
+
+            var amount = await Task.Factory.StartNew(() => GetAmount(isDomestic, yearLevel, now)).ConfigureAwait(false);
+
+            return amount;
+        }
+
+        /// <summary>
+        /// Saves the payment details into the database.
+        /// </summary>
+        /// <param name="formId">Enrolment form Id.</param>
+        /// <param name="amount">Payment amount.</param>
+        /// <returns>Returns the reference number.</returns>
+        /// <exception cref="ArgumentException">Invalid enrolment form Id.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Invalid amount.</exception>
         public async Task<string> SavePaymentAsync(Guid formId, decimal amount)
         {
             if (formId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(formId));
+                throw new ArgumentException("Invalid enrolment form Id", nameof(formId));
             }
 
             if (!IsValidAmount(amount))
             {
-                throw new ArgumentOutOfRangeException(nameof(amount));
+                throw new ArgumentOutOfRangeException(nameof(amount), "Invalid amount");
             }
 
             var payment = await this.AddOrUpdatePaymentAsync(formId, amount).ConfigureAwait(false);
@@ -165,6 +200,15 @@ namespace WaverleyKls.Enrolment.Services
         {
             var valid = amount == FullFeeAmount || amount == KinderAmount || amount == DomesticAmount ||
                         amount == SecondTermAmount || amount == ThirdTermAmount || amount == FourthTermAmount;
+
+            return valid;
+        }
+
+        private static bool IsValidYearLevel(string yearLevel)
+        {
+            var levels = new[] { "K", "P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+
+            var valid = levels.Any(p => p.Equals(yearLevel, StringComparison.CurrentCultureIgnoreCase));
 
             return valid;
         }

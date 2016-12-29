@@ -12,12 +12,20 @@ using WaverleyKls.Enrolment.ViewModels;
 
 namespace WaverleyKls.Enrolment.Services
 {
+    /// <summary>
+    /// This represents the service entity for the student details in the enrolment form.
+    /// </summary>
     public class StudentDetailsService : IStudentDetailsService
     {
         private readonly IWklsDbContext _context;
 
         private bool _disposed;
 
+        /// <summary>
+        /// Initialises a new instance of the <see cref="StudentDetailsService"/> class.
+        /// </summary>
+        /// <param name="context"><see cref="IWklsDbContext"/> instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null" />.</exception>
         public StudentDetailsService(IWklsDbContext context)
         {
             if (context == null)
@@ -28,11 +36,17 @@ namespace WaverleyKls.Enrolment.Services
             this._context = context;
         }
 
+        /// <summary>
+        /// Gets the <see cref="StudentDetailsViewModel"/> instance.
+        /// </summary>
+        /// <param name="formId">Enrolment form Id.</param>
+        /// <returns>Returns the <see cref="StudentDetailsViewModel"/> instance.</returns>
+        /// <exception cref="ArgumentException">Invalid enrolment form Id.</exception>
         public async Task<StudentDetailsViewModel> GetStudentDetailsAsync(Guid formId)
         {
             if (formId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(formId));
+                throw new ArgumentException("Invalid enrolment form Id", nameof(formId));
             }
 
             var form = await this._context.EnrolmentForms.SingleOrDefaultAsync(p => p.FormId == formId).ConfigureAwait(false);
@@ -51,11 +65,19 @@ namespace WaverleyKls.Enrolment.Services
             return model;
         }
 
+        /// <summary>
+        /// Saves the <see cref="StudentDetailsViewModel"/> into the database.
+        /// </summary>
+        /// <param name="formId">Enrolment form Id.</param>
+        /// <param name="model"><see cref="StudentDetailsViewModel"/> instance.</param>
+        /// <returns>Returns the enrolment form Id.</returns>
+        /// <exception cref="ArgumentException">Invalid enrolment form Id.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="model"/> is <see langword="null" />.</exception>
         public async Task<Guid> SaveStudentDetailsAsync(Guid formId, StudentDetailsViewModel model)
         {
             if (formId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(formId));
+                throw new ArgumentException("Invalid enrolment form Id", nameof(formId));
             }
 
             if (model == null)

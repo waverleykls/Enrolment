@@ -5,8 +5,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
+
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+
 using WaverleyKls.Enrolment.Extensions;
 using WaverleyKls.Enrolment.Services.Interfaces;
 using WaverleyKls.Enrolment.Settings;
@@ -15,6 +16,9 @@ using WaverleyKls.Enrolment.ViewModels;
 
 namespace WaverleyKls.Enrolment.Services
 {
+    /// <summary>
+    /// This represents the service entity for email through SendGrid.
+    /// </summary>
     public class SendGridMailService : ISendGridMailService
     {
         private readonly SendGridSettings _sgSettings;
@@ -22,6 +26,13 @@ namespace WaverleyKls.Enrolment.Services
 
         private bool _disposed;
 
+        /// <summary>
+        /// Initialises a new instance of the <see cref="SendGridMailService"/> class.
+        /// </summary>
+        /// <param name="sendGridSettings"><see cref="SendGridSettings"/> instance.</param>
+        /// <param name="jsonSerialiserSettings"><see cref="JsonSerializerSettings"/> instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="sendGridSettings"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="jsonSerialiserSettings"/> is <see langword="null" />.</exception>
         public SendGridMailService(SendGridSettings sendGridSettings, JsonSerializerSettings jsonSerialiserSettings)
         {
             if (sendGridSettings == null)
@@ -39,6 +50,15 @@ namespace WaverleyKls.Enrolment.Services
             this._jsSettings = jsonSerialiserSettings;
         }
 
+        /// <summary>
+        /// Gets the email template.
+        /// </summary>
+        /// <param name="templateName">Template name.</param>
+        /// <returns>Returns the <see cref="EmailTemplateViewModel"/> instance.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="templateName"/> is <see langword="null" />.</exception>
+        /// <exception cref="AppSettingsException">EndpointUri not found.</exception>
+        /// <exception cref="AppSettingsException">Template not found.</exception>
+        /// <exception cref="HttpException"><see cref="HttpStatusCode"/> is neither 200 (OK) nor 202 (Accepted).</exception>
         public async Task<EmailTemplateViewModel> GetEmailTemplateAsync(string templateName)
         {
             if (templateName.IsNullOrWhiteSpace())
@@ -75,6 +95,13 @@ namespace WaverleyKls.Enrolment.Services
             }
         }
 
+        /// <summary>
+        /// Sends the email through SendGrid Web API.
+        /// </summary>
+        /// <param name="model"><see cref="EmailViewModel"/> instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="model"/> is <see langword="null" />.</exception>
+        /// <exception cref="AppSettingsException">EndpointUri not found.</exception>
+        /// <exception cref="HttpException"><see cref="HttpStatusCode"/> is neither 200 (OK) nor 202 (Accepted).</exception>
         public async Task SendAsync(EmailViewModel model)
         {
             if (model == null)
@@ -83,13 +110,6 @@ namespace WaverleyKls.Enrolment.Services
             }
 
             model.From = new MailAddress() { Name = this._sgSettings.From.Name, Email = this._sgSettings.From.Email };
-            //model = new EmailViewModel()
-            //        {
-            //            From = new MailAddress() { Name = "Waverley Korean Language School", Email = "waverleykls@outlook.com" },
-            //            Personalizations = { new Personalisation() { To = { new MailAddress() { Name = "Justin Yoo", Email = "justin.yoojh@gmail.com" } } } },
-            //            Subject = "SendGrid TEST TEST",
-            //            Content = { new Content() { Type = "text/html", Value = "<strong>Hello World</strong>" } }
-            //        };
 
             var serialised = JsonConvert.SerializeObject(model, this._jsSettings);
 
@@ -131,6 +151,7 @@ namespace WaverleyKls.Enrolment.Services
         private static bool IsResponseSuccessful(HttpStatusCode sc)
         {
             var successful = sc == HttpStatusCode.OK || sc == HttpStatusCode.Accepted;
+
             return successful;
         }
     }
