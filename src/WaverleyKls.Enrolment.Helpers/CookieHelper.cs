@@ -4,20 +4,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WaverleyKls.Enrolment.Extensions;
+using WaverleyKls.Enrolment.Helpers.Interfaces;
 
 namespace WaverleyKls.Enrolment.Helpers
 {
+    /// <summary>
+    /// This represents the helper entity for the cookie.
+    /// </summary>
     public class CookieHelper : ICookieHelper
     {
         private const string FormId = "formId";
 
         private bool _disposed;
 
+        /// <summary>
+        /// Clears the enrolment form Id from the cookie.
+        /// </summary>
+        /// <param name="controller"><see cref="Controller"/> instance.</param>
         public async Task ClearFormIdAsync(Controller controller)
         {
             await Task.Factory.StartNew(() => ClearFormId(controller)).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Gets the enrolment form Id from the cookie.
+        /// </summary>
+        /// <param name="controller"><see cref="Controller"/> instance.</param>
+        /// <returns>Returns the enrolment form Id.</returns>
         public async Task<Guid> GetFormIdAsync(Controller controller)
         {
             var formId = await Task.Factory.StartNew(() => this.GetFormId(controller)).ConfigureAwait(false);
@@ -50,6 +63,7 @@ namespace WaverleyKls.Enrolment.Helpers
             if (controller.Request.Cookies.TryGetValue(FormId, out base64EncodedFormId))
             {
                 formId = base64EncodedFormId.ToGuid();
+
                 return formId;
             }
 
