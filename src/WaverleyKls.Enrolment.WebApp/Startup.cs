@@ -14,6 +14,7 @@ using Newtonsoft.Json.Serialization;
 
 using WaverleyKls.Enrolment.EntityModels;
 using WaverleyKls.Enrolment.Helpers;
+using WaverleyKls.Enrolment.Helpers.Interfaces;
 using WaverleyKls.Enrolment.Services;
 using WaverleyKls.Enrolment.Services.Interfaces;
 using WaverleyKls.Enrolment.Settings;

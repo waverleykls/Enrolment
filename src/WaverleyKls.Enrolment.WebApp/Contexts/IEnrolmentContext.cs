@@ -1,6 +1,6 @@
 using System;
 
-using WaverleyKls.Enrolment.Helpers;
+using WaverleyKls.Enrolment.Helpers.Interfaces;
 using WaverleyKls.Enrolment.Services.Interfaces;
 
 namespace WaverleyKls.Enrolment.WebApp.Contexts
