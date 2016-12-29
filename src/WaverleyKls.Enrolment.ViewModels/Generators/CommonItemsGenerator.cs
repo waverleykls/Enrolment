@@ -2,8 +2,15 @@
 
 namespace WaverleyKls.Enrolment.ViewModels.Generators
 {
+    /// <summary>
+    /// This represents the generator entity commonly used for view models.
+    /// </summary>
     public static class CommonItemsGenerator
     {
+        /// <summary>
+        /// Gets the list of answers.
+        /// </summary>
+        /// <returns>Returns the list of answers.</returns>
         public static IEnumerable<KeyValuePair<string, bool>> GetAnswers()
         {
             var answers = new[]
@@ -14,6 +21,10 @@ namespace WaverleyKls.Enrolment.ViewModels.Generators
             return answers;
         }
 
+        /// <summary>
+        /// Gets the list of genders.
+        /// </summary>
+        /// <returns>Returns the list of genders.</returns>
         public static IEnumerable<KeyValuePair<string, string>> GetGenders()
         {
             var genders = new[]
@@ -25,6 +36,10 @@ namespace WaverleyKls.Enrolment.ViewModels.Generators
             return genders;
         }
 
+        /// <summary>
+        /// Gets the list of states.
+        /// </summary>
+        /// <returns>Returns the list of states.</returns>
         public static IEnumerable<KeyValuePair<string, string>> GetStates()
         {
             var states = new[]

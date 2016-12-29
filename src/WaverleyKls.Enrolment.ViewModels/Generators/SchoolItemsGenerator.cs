@@ -2,8 +2,15 @@
 
 namespace WaverleyKls.Enrolment.ViewModels.Generators
 {
+    /// <summary>
+    /// This represents the generator entity used for school in view models.
+    /// </summary>
     public static class SchoolItemsGenerator
     {
+        /// <summary>
+        /// Gets the list of school years.
+        /// </summary>
+        /// <returns>Returns the list of school years.</returns>
         public static IEnumerable<KeyValuePair<string, string>> GetYearLevels()
         {
             var levels = new[]
@@ -26,6 +33,10 @@ namespace WaverleyKls.Enrolment.ViewModels.Generators
             return levels;
         }
 
+        /// <summary>
+        /// Gets the list of school fee schemes.
+        /// </summary>
+        /// <returns>Returns the list of school fee schemes.</returns>
         public static IEnumerable<KeyValuePair<string, bool>> GetFeeSchemes()
         {
             var schemes = new[]
