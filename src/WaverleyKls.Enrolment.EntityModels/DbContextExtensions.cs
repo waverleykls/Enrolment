@@ -13,9 +13,10 @@ namespace WaverleyKls.Enrolment.EntityModels
         /// Adds or updates the database context.
         /// </summary>
         /// <typeparam name="TEntity">Type of entity to add or update.</typeparam>
-        /// <param name="ctx"><see cref="IWklsDbContext"/> instance.</param>
+        /// <param name="ctx"><see cref="IDbContext"/> instance.</param>
         /// <param name="entity">Entity to add or update.</param>
-        public static void AddOrUpdate<TEntity>(this IWklsDbContext ctx, TEntity entity) where TEntity : class
+        /// <exception cref="InvalidOperationException">Invalid entry state.</exception>
+        public static void AddOrUpdate<TEntity>(this IDbContext ctx, TEntity entity) where TEntity : class
         {
             var entry = ctx.Entry(entity);
             switch (entry.State)
@@ -34,7 +35,7 @@ namespace WaverleyKls.Enrolment.EntityModels
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidOperationException("Invalid entry state");
             }
         }
     }
