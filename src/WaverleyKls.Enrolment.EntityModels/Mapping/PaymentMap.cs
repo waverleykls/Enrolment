@@ -15,6 +15,7 @@ namespace WaverleyKls.Enrolment.EntityModels.Mapping
             // Properties
             builder.Property(p => p.PaymentId).IsRequired();
             builder.Property(p => p.FormId).IsRequired();
+            builder.Property(p => p.ReferenceNumber).IsRequired().HasMaxLength(16);
             builder.Property(p => p.Amount).IsRequired();
             builder.Property(p => p.DatePaid).IsRequired();
             builder.Property(p => p.DateCreated).IsRequired();
@@ -24,6 +25,7 @@ namespace WaverleyKls.Enrolment.EntityModels.Mapping
             builder.ToTable("Payment");
             builder.Property(p => p.PaymentId).HasColumnName("PaymentId");
             builder.Property(p => p.FormId).HasColumnName("FormId");
+            builder.Property(p => p.ReferenceNumber).HasColumnName("ReferenceNumber");
             builder.Property(p => p.Amount).HasColumnName("Amount");
             builder.Property(p => p.DatePaid).HasColumnName("DatePaid");
             builder.Property(p => p.DateCreated).HasColumnName("DateCreated");

@@ -7,12 +7,18 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="row">
             <h2>Enrolment Application Submitted</h2>
-            
+
             <h3>Reference Number: @Model.ReferenceNumber</h3>
 
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <p>Thank you very much for submitting this application for your child. We have sent a confirmation email to your email address, @Model.Email, including the application reference number and payment details.</p>
+                <p>Thank you very much for submitting this application for your child. We have sent a confirmation email to your email address, <strong>@Model.Email</strong>, including the application reference number and payment details.</p>
                 <p>We look forward to seeing your child soon at Waverley Korean Language School!</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <a class="btn btn-primary" asp-controller="Home" asp-action="GetStudentDetailsForm">New Enrolment</a>
             </div>
         </div>
     </div>

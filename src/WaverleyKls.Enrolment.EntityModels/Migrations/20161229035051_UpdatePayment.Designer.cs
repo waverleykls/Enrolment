@@ -8,9 +8,10 @@ using WaverleyKls.Enrolment.EntityModels;
 namespace WaverleyKls.Enrolment.EntityModels.Migrations
 {
     [DbContext(typeof(WklsDbContext))]
-    partial class WklsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161229035051_UpdatePayment")]
+    partial class UpdatePayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")

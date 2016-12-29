@@ -289,7 +289,8 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             var sd = await this._context.StudentDetailsService.GetStudentDetailsAsync(formId).ConfigureAwait(false);
             var gd = await this._context.GuardianDetailsService.GetGuardianDetailsAsync(formId).ConfigureAwait(false);
 
-            var amount = 95.00M;
+            var amount = await this._context.PaymentService.GetAmountAsync(sd.IsDomestic, sd.YearLevel, DateTimeOffset.UtcNow).ConfigureAwait(false);
+            var referenceNumber = await this._context.PaymentService.SavePaymentAsync(formId, amount).ConfigureAwait(false);
 
             var template = await this._context.SendGridMailService.GetEmailTemplateAsync("SubmissionConfirmation").ConfigureAwait(false);
 
@@ -314,10 +315,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                          {
                              new Content()
                              {
-                                 Type = "text/plain",
+                                 Type = "text/plain", // TODO: implement enum
                                  Value =
                                      template.PlainContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
-                                             .Replace(":referenceNumber", string.Empty)
+                                             .Replace(":referenceNumber", referenceNumber)
                                              .Replace(":amount", amount.ToString("F2"))
                              },
                              new Content()
@@ -325,7 +326,7 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
                                  Type = "text/html",
                                  Value =
                                      template.HtmlContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
-                                             .Replace(":referenceNumber", string.Empty)
+                                             .Replace(":referenceNumber", referenceNumber)
                                              .Replace(":amount", amount.ToString("F2"))
                              },
                          }
@@ -341,9 +342,12 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         {
             var formId = await this._context.CookieHelper.GetFormIdAsync(this).ConfigureAwait(false);
 
+            var rn = await this._context.PaymentService.GetReferenceNumberByFormIdAsync(formId).ConfigureAwait(false);
+            var gd = await this._context.GuardianDetailsService.GetGuardianDetailsAsync(formId).ConfigureAwait(false);
+
             await this._context.CookieHelper.ClearFormIdAsync(this).ConfigureAwait(false);
 
-            var vm = new ThankyouViewModel() { ReferenceNumber = "WKLS201701001", Email = "jane.doe@email.com" };
+            var vm = new ThankyouViewModel() { ReferenceNumber = rn, Email = gd.Email };
 
             return this.View("GetThankyou", vm);
         }

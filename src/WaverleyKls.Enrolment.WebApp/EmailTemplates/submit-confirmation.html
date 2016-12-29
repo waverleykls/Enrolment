@@ -82,6 +82,10 @@
             color: orange;
         }
 
+        .reference-number {
+            color: blue !important;
+        }
+
         @media only screen and (max-device-width: 480px) {
             a[href^="tel"], a[href^="sms"] {
                 text-decoration: none;
@@ -153,7 +157,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <p>Thanks for submitting the enrolment form of your child, :name. Your reference number is :referenceNumber.</p>
+                            <p>Thanks for submitting the enrolment form of your child, :name. Your reference number is <strong class="reference-number">:referenceNumber</strong>.</p>
                             <p>Please find the payment details below:</p>
                         </td>
                     </tr>

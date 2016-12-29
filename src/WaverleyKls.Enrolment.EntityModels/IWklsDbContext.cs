@@ -12,6 +12,8 @@ namespace WaverleyKls.Enrolment.EntityModels
     {
         DbSet<EnrolmentForm> EnrolmentForms { get; set; }
 
+        DbSet<Payment> Payments { get; set; }
+
         DatabaseFacade Database { get; }
 
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;

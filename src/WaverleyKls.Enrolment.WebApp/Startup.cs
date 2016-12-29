@@ -83,6 +83,7 @@ namespace WaverleyKls.Enrolment.WebApp
             services.AddTransient<IEmergencyContactDetailsService, EmergencyContactDetailsService>();
             services.AddTransient<IMedicalDetailsService, MedicalDetailsService>();
             services.AddTransient<IGuardianConsentsService, GuardianConsentsService>();
+            services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<ISendGridMailService, SendGridMailService>();
 
             services.AddTransient<IEnrolmentContext, EnrolmentContext>();

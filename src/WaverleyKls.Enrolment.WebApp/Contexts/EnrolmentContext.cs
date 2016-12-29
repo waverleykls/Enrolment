@@ -15,6 +15,7 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
                                 IEmergencyContactDetailsService emergencyContactDetailsService,
                                 IMedicalDetailsService medicalDetailsService,
                                 IGuardianConsentsService guardianConsentsService,
+                                IPaymentService paymentService,
                                 ISendGridMailService sendGridMailService)
         {
             if (cookieHelper == null)
@@ -59,6 +60,13 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
 
             this.GuardianConsentsService = guardianConsentsService;
 
+            if (paymentService == null)
+            {
+                throw new ArgumentNullException(nameof(paymentService));
+            }
+
+            this.PaymentService = paymentService;
+
             if (sendGridMailService == null)
             {
                 throw new ArgumentNullException(nameof(sendGridMailService));
@@ -77,6 +85,8 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
         public IMedicalDetailsService MedicalDetailsService { get; }
 
         public IGuardianConsentsService GuardianConsentsService { get; }
+
+        public IPaymentService PaymentService { get; }
 
         public ISendGridMailService SendGridMailService { get; }
 

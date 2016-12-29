@@ -8,9 +8,10 @@ using WaverleyKls.Enrolment.EntityModels;
 namespace WaverleyKls.Enrolment.EntityModels.Migrations
 {
     [DbContext(typeof(WklsDbContext))]
-    partial class WklsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161229034649_AddPayment")]
+    partial class AddPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -73,11 +74,6 @@ namespace WaverleyKls.Enrolment.EntityModels.Migrations
 
                     b.Property<Guid>("FormId")
                         .HasColumnName("FormId");
-
-                    b.Property<string>("ReferenceNumber")
-                        .IsRequired()
-                        .HasColumnName("ReferenceNumber")
-                        .HasAnnotation("MaxLength", 16);
 
                     b.HasKey("PaymentId");
 
