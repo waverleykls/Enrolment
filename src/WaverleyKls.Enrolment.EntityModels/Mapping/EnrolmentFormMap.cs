@@ -5,8 +5,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace WaverleyKls.Enrolment.EntityModels.Mapping
 {
+    /// <summary>
+    /// This represents the mapping entity for the <see cref="EnrolmentForm"/> class.
+    /// </summary>
     public class EnrolmentFormMap : IEntityMapper<EnrolmentForm>
     {
+        /// <summary>
+        /// Initialises a new instance of the <see cref="EnrolmentFormMap"/> class.
+        /// </summary>
+        /// <param name="builder"><see cref="EntityTypeBuilder{EnrolmentForm}"/> instance.</param>
         public void Map(EntityTypeBuilder<EnrolmentForm> builder)
         {
             // Primary Key
