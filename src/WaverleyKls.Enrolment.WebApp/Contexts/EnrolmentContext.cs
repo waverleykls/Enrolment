@@ -5,10 +5,32 @@ using WaverleyKls.Enrolment.Services.Interfaces;
 
 namespace WaverleyKls.Enrolment.WebApp.Contexts
 {
+    /// <summary>
+    /// This represents the context entity for enrolment form.
+    /// </summary>
     public class EnrolmentContext : IEnrolmentContext
     {
         private bool _disposed;
 
+        /// <summary>
+        /// Initialises a new instance of the <see cref="EnrolmentContext"/> class.
+        /// </summary>
+        /// <param name="cookieHelper"><see cref="ICookieHelper"/> instance.</param>
+        /// <param name="studentDetailsService"><see cref="IStudentDetailsService"/> instance.</param>
+        /// <param name="guardianDetailsService"><see cref="IGuardianDetailsService"/> instance.</param>
+        /// <param name="emergencyContactDetailsService"><see cref="IEmergencyContactDetailsService"/> instance.</param>
+        /// <param name="medicalDetailsService"><see cref="IMedicalDetailsService"/> instance.</param>
+        /// <param name="guardianConsentsService"><see cref="IGuardianConsentsService"/> instance.</param>
+        /// <param name="paymentService"><see cref="IPaymentService"/> instance.</param>
+        /// <param name="sendGridMailService"><see cref="ISendGridMailService"/> instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="cookieHelper"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="studentDetailsService"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="guardianDetailsService"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="emergencyContactDetailsService"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="medicalDetailsService"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="guardianConsentsService"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="paymentService"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="sendGridMailService"/> is <see langword="null" />.</exception>
         public EnrolmentContext(ICookieHelper cookieHelper,
                                 IStudentDetailsService studentDetailsService,
                                 IGuardianDetailsService guardianDetailsService,
@@ -74,20 +96,45 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
 
             this.SendGridMailService = sendGridMailService;
         }
+
+        /// <summary>
+        /// Gets the <see cref="ICookieHelper"/> instance.
+        /// </summary>
         public ICookieHelper CookieHelper { get; }
 
+        /// <summary>
+        /// Gets the <see cref="IStudentDetailsService"/> instance.
+        /// </summary>
         public IStudentDetailsService StudentDetailsService { get; }
 
+        /// <summary>
+        /// Gets the <see cref="IGuardianDetailsService"/> instance.
+        /// </summary>
         public IGuardianDetailsService GuardianDetailsService { get; }
 
+        /// <summary>
+        /// Gets the <see cref="IEmergencyContactDetailsService"/> instance.
+        /// </summary>
         public IEmergencyContactDetailsService EmergencyContactDetailsService { get; }
 
+        /// <summary>
+        /// Gets the <see cref="IMedicalDetailsService"/> instance.
+        /// </summary>
         public IMedicalDetailsService MedicalDetailsService { get; }
 
+        /// <summary>
+        /// Gets the <see cref="IGuardianConsentsService"/> instance.
+        /// </summary>
         public IGuardianConsentsService GuardianConsentsService { get; }
 
+        /// <summary>
+        /// Gets the <see cref="IPaymentService"/> instance.
+        /// </summary>
         public IPaymentService PaymentService { get; }
 
+        /// <summary>
+        /// Gets the <see cref="ISendGridMailService"/> instance.
+        /// </summary>
         public ISendGridMailService SendGridMailService { get; }
 
         /// <summary>
