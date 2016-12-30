@@ -8,6 +8,9 @@ using WaverleyKls.Enrolment.WebApp.Contexts;
 
 namespace WaverleyKls.Enrolment.WebApp.Controllers
 {
+    /// <summary>
+    /// This represents the controller entity for enrolment form.
+    /// </summary>
     [Route("")]
     public class HomeController : Controller
     {
@@ -27,6 +30,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
 
         private readonly IEnrolmentContext _context;
 
+        /// <summary>
+        /// Initialises a new instance of the <see cref="HomeController"/> class.
+        /// </summary>
+        /// <param name="context"><see cref="IEnrolmentContext"/> instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null" />.</exception>
         public HomeController(IEnrolmentContext context)
         {
             if (context == null)
@@ -37,11 +45,19 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             this._context = context;
         }
 
+        /// <summary>
+        /// Gets the home page.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         public IActionResult Index()
         {
-            return this.View();
+            return this.RedirectToAction(StudentDetailsGet);
         }
 
+        /// <summary>
+        /// Clears the enrolment form cookies.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         [Route("start-over")]
         [HttpGet]
         public async Task<IActionResult> ClearEnrolmentForm()
@@ -51,6 +67,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.RedirectToAction(StudentDetailsGet);
         }
 
+        /// <summary>
+        /// Gets the student details page of the enrolment form.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance as a view.</returns>
         [Route("student-details")]
         [HttpGet]
         public async Task<IActionResult> GetStudentDetailsForm()
@@ -63,6 +83,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.View("StudentDetails", model.Clone());
         }
 
+        /// <summary>
+        /// Sets the student details.
+        /// </summary>
+        /// <param name="model"><see cref="StudentDetailsViewModel"/> instance.</param>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         [Route("student-details")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -87,6 +112,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.RedirectToAction(GuardianDetailsGet);
         }
 
+        /// <summary>
+        /// Gets the parent/guardian details page of the enrolment form.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance as a view.</returns>
         [Route("guardian-details")]
         [HttpGet]
         public async Task<IActionResult> GetGuardianDetailsForm()
@@ -99,6 +128,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.View("GuardianDetails", model.Clone());
         }
 
+        /// <summary>
+        /// Sets the parent/guardian details.
+        /// </summary>
+        /// <param name="model"><see cref="GuardianDetailsViewModel"/> instance.</param>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         [Route("guardian-details")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -127,6 +161,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.RedirectToAction(actionName);
         }
 
+        /// <summary>
+        /// Gets the emergency contact details page of the enrolment form.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance as a view.</returns>
         [Route("emergency-contact-details")]
         [HttpGet]
         public async Task<IActionResult> GetEmergencyContactDetailsForm()
@@ -141,6 +179,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.View("EmergencyContactDetails", model.Clone());
         }
 
+        /// <summary>
+        /// Sets the emergency contact details.
+        /// </summary>
+        /// <param name="model"><see cref="EmergencyContactDetailsViewModel"/> instance.</param>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         [Route("emergency-contact-details")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -169,6 +212,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.RedirectToAction(actionName);
         }
 
+        /// <summary>
+        /// Gets the medical details page of the enrolment form.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance as a view.</returns>
         [Route("medical-details")]
         [HttpGet]
         public async Task<IActionResult> GetMedicalDetailsForm()
@@ -181,6 +228,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.View("MedicalDetails", model.Clone());
         }
 
+        /// <summary>
+        /// Sets the medical details.
+        /// </summary>
+        /// <param name="model"><see cref="MedicalDetailsViewModel"/> instance.</param>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         [Route("medical-details")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -209,6 +261,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.RedirectToAction(actionName);
         }
 
+        /// <summary>
+        /// Gets the parent/guardian consents page of the enrolment form.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance as a view.</returns>
         [Route("guardian-consents")]
         [HttpGet]
         public async Task<IActionResult> GetGuardianConsentsForm()
@@ -221,6 +277,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.View("GuardianConsents", model.Clone());
         }
 
+        /// <summary>
+        /// Sets the parent/guardian consents.
+        /// </summary>
+        /// <param name="model"><see cref="GuardianConsentsViewModel"/> instance.</param>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         [Route("guardian-consents")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -251,6 +312,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.RedirectToAction(actionName);
         }
 
+        /// <summary>
+        /// Gets the conformation page of the enrolment form.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance as a view.</returns>
         [Route("confirmation")]
         [HttpGet]
         public async Task<IActionResult> GetConfirmation()
@@ -269,6 +334,11 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.View("GetConfirmation", vm);
         }
 
+        /// <summary>
+        /// Saves all details.
+        /// </summary>
+        /// <param name="model"><see cref="ConfirmationViewModel"/> instance.</param>
+        /// <returns>Returns the <see cref="IActionResult"/> instance for redirection.</returns>
         [Route("submit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -336,6 +406,10 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             return this.RedirectToAction(ThankyouGet);
         }
 
+        /// <summary>
+        /// Gets the thank you page of the enrolment form.
+        /// </summary>
+        /// <returns>Returns the <see cref="IActionResult"/> instance as a view.</returns>
         [Route("thankyou")]
         [HttpGet]
         public async Task<IActionResult> GetThankyou()
