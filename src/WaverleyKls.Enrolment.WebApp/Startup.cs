@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -61,6 +62,8 @@ namespace WaverleyKls.Enrolment.WebApp
                         o.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     });
 
+            services.AddAuthentication(o => o.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
+
             services.AddScoped<IWklsDbContext>(p => p.GetService<WklsDbContext>());
 
             var sendGrid = Configuration.Get<SendGridSettings>("sendGrid");
@@ -103,7 +106,7 @@ namespace WaverleyKls.Enrolment.WebApp
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/error");
             }
 
             var cookie = new CookiePolicyOptions()
@@ -114,6 +117,17 @@ namespace WaverleyKls.Enrolment.WebApp
             app.UseCookiePolicy(cookie);
 
             app.UseStaticFiles();
+
+            app.UseCookieAuthentication();
+
+            var auth = Configuration.Get<AuthenticationSettings>("authentication");
+            var openIdConnect = new OpenIdConnectOptions
+                                {
+                                    ClientId = auth.AzureAd.ClientId,
+                                    Authority = $"{auth.AzureAd.AadInstance.TrimEnd('/')}/{auth.AzureAd.TenantId}",
+                                    CallbackPath = auth.AzureAd.CallbackPath
+                                };
+            app.UseOpenIdConnectAuthentication(openIdConnect);
 
             app.UseMvcWithDefaultRoute();
         }

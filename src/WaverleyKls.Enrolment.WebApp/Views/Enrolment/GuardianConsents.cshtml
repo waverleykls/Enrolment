@@ -25,7 +25,7 @@
 <div class="row">
     <h2>Parent/Guardian Declaration and Agreement</h2>
 
-    <form class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-horizontal" asp-controller="Home" asp-action="SetGuardianConsents" method="post">
+    <form class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-horizontal" asp-controller="Enrolment" asp-action="SetGuardianConsents" method="post">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <p>I certify that the information provided on this form is true and correct and:</p>
@@ -98,7 +98,7 @@
 
         <div class="form-group text-center">
             <button type="submit" class="btn btn-default" name="Direction" value="prev">&lt;&lt; Prev</button>
-            <a class="btn btn-warning" asp-controller="Home" asp-action="ClearEnrolmentForm">Start Over</a>
+            <a class="btn btn-warning" asp-controller="Enrolment" asp-action="ClearEnrolmentForm">Start Over</a>
             <button type="submit" class="btn btn-primary" name="Direction" value="next">Next &gt;&gt;</button>
         </div>
     </form>

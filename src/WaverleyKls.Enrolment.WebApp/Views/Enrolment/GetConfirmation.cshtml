@@ -98,10 +98,10 @@
         </div>
     </div>
     
-    <form class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-horizontal" asp-controller="Home" asp-action="SubmitEnrolment" method="post">
+    <form class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-horizontal" asp-controller="Enrolment" asp-action="SubmitEnrolment" method="post">
         <div class="form-group text-center">
             <button type="submit" class="btn btn-default" name="Direction" value="prev">&lt;&lt; Prev</button>
-            <a class="btn btn-warning" asp-controller="Home" asp-action="ClearEnrolmentForm">Start Over</a>
+            <a class="btn btn-warning" asp-controller="Enrolment" asp-action="ClearEnrolmentForm">Start Over</a>
             <button type="submit" class="btn btn-primary" name="Direction" value="next">Submit &gt;&gt;</button>
         </div>
     </form>

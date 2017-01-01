@@ -1,0 +1,14 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    var claim = this.User.Claims.Single(p => p.Type.Equals("name", StringComparison.CurrentCultureIgnoreCase));
+    <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text">Hello @claim.Value!</li>
+        <li><a asp-area="" asp-controller="Admin" asp-action="SignOut">Sign Out</a></li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-area="" asp-controller="Admin" asp-action="Index">Admin</a></li>
+    </ul>
+}
