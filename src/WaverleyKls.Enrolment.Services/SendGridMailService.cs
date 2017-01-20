@@ -96,6 +96,125 @@ namespace WaverleyKls.Enrolment.Services
         }
 
         /// <summary>
+        /// Gets the <see cref="EmailViewModel"/> for confirmation to be sent to the applicant.
+        /// </summary>
+        /// <param name="sd"><see cref="StudentDetailsViewModel"/> object.</param>
+        /// <param name="gd"><see cref="GuardianDetailsViewModel"/> object.</param>
+        /// <param name="amount">Amount to pay.</param>
+        /// <param name="referenceNumber">Reference number.</param>
+        /// <param name="template"><see cref="EmailTemplateViewModel"/> object.</param>
+        /// <returns>Returns the <see cref="EmailViewModel"/> for confirmation to be sent to the applicant.</returns>
+        public EmailViewModel GetConfirmationEmailViewModelForApplicant(StudentDetailsViewModel sd, GuardianDetailsViewModel gd, decimal amount, string referenceNumber, EmailTemplateViewModel template)
+        {
+            var vm = new EmailViewModel()
+                     {
+                         Personalizations =
+                         {
+                             new Personalisation()
+                             {
+                                 To =
+                                 {
+                                     new MailAddress()
+                                     {
+                                         Name = $"{gd.FirstName} {gd.LastName}",
+                                         Email = gd.Email
+                                     }
+                                 }
+                             }
+                         },
+                         Subject = template.Subject.Replace(":name", $"{sd.FirstName} {sd.LastName}"),
+                         Content =
+                         {
+                             new Content()
+                             {
+                                 Type = "text/plain", // TODO: implement enum
+                                 Value =
+                                     template.PlainContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
+                                             .Replace(":referenceNumber", referenceNumber)
+                                             .Replace(":amount", amount.ToString("F2"))
+                             },
+                             new Content()
+                             {
+                                 Type = "text/html",
+                                 Value =
+                                     template.HtmlContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
+                                             .Replace(":referenceNumber", referenceNumber)
+                                             .Replace(":amount", amount.ToString("F2"))
+                             },
+                         }
+                     };
+
+            return vm;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="EmailViewModel"/> for confirmation to be sent to the admin.
+        /// </summary>
+        /// <param name="sd"><see cref="StudentDetailsViewModel"/> object.</param>
+        /// <param name="gd"><see cref="GuardianDetailsViewModel"/> object.</param>
+        /// <param name="amount">Amount to pay.</param>
+        /// <param name="referenceNumber">Reference number.</param>
+        /// <param name="template"><see cref="EmailTemplateViewModel"/> object.</param>
+        /// <returns>Returns the <see cref="EmailViewModel"/> for confirmation to be sent to the admin.</returns>
+        public EmailViewModel GetConfirmationEmailViewModelForAdmin(StudentDetailsViewModel sd, GuardianDetailsViewModel gd, decimal amount, string referenceNumber, EmailTemplateViewModel template)
+        {
+            var vm = new EmailViewModel()
+                     {
+                         Personalizations =
+                         {
+                             new Personalisation()
+                             {
+                                 To =
+                                 {
+                                     new MailAddress()
+                                     {
+                                         Name = "Waverley KLS Admin",
+                                         Email = "waverleykls@outlook.com"
+                                     },
+                                     new MailAddress()
+                                     {
+                                         Name = "Waverley KLS Principal",
+                                         Email = "mk7189@hotmail.com"
+                                     }
+                                 }
+                             }
+                         },
+                         Subject = template.Subject.Replace(":name", $"{sd.FirstName} {sd.LastName}"),
+                         Content =
+                         {
+                             new Content()
+                             {
+                                 Type = "text/plain", // TODO: implement enum
+                                 Value =
+                                     template.PlainContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
+                                             .Replace(":referenceNumber", referenceNumber)
+                                             .Replace(":amount", amount.ToString("F2"))
+                                             .Replace(":guardian", $"{gd.FirstName} {gd.LastName}")
+                                             .Replace(":email", gd.Email)
+                                             .Replace(":home", gd.HomePhone)
+                                             .Replace(":work", gd.WorkPhone)
+                                             .Replace(":mobile", gd.MobilePhone)
+                             },
+                             new Content()
+                             {
+                                 Type = "text/html",
+                                 Value =
+                                     template.HtmlContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
+                                             .Replace(":referenceNumber", referenceNumber)
+                                             .Replace(":amount", amount.ToString("F2"))
+                                             .Replace(":guardian", $"{gd.FirstName} {gd.LastName}")
+                                             .Replace(":email", gd.Email)
+                                             .Replace(":home", gd.HomePhone)
+                                             .Replace(":work", gd.WorkPhone)
+                                             .Replace(":mobile", gd.MobilePhone)
+                             },
+                         }
+                     };
+
+            return vm;
+        }
+
+        /// <summary>
         /// Sends the email through SendGrid Web API.
         /// </summary>
         /// <param name="model"><see cref="EmailViewModel"/> instance.</param>

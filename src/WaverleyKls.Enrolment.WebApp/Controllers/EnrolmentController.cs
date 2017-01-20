@@ -362,45 +362,14 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             var amount = await this._context.PaymentService.GetAmountAsync(sd.IsDomestic, sd.YearLevel, DateTimeOffset.UtcNow).ConfigureAwait(false);
             var referenceNumber = await this._context.PaymentService.SavePaymentAsync(formId, amount).ConfigureAwait(false);
 
-            var template = await this._context.SendGridMailService.GetEmailTemplateAsync("SubmissionConfirmation").ConfigureAwait(false);
+            var template = await this._context.SendGridMailService.GetEmailTemplateAsync("SubmissionConfirmationForApplicant").ConfigureAwait(false);
 
-            var vm = new EmailViewModel()
-                     {
-                         Personalizations =
-                         {
-                             new Personalisation()
-                             {
-                                 To =
-                                 {
-                                     new MailAddress()
-                                     {
-                                         Name = $"{gd.FirstName} {gd.LastName}",
-                                         Email = gd.Email
-                                     }
-                                 }
-                             }
-                         },
-                         Subject = template.Subject.Replace(":name", $"{sd.FirstName} {sd.LastName}"),
-                         Content =
-                         {
-                             new Content()
-                             {
-                                 Type = "text/plain", // TODO: implement enum
-                                 Value =
-                                     template.PlainContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
-                                             .Replace(":referenceNumber", referenceNumber)
-                                             .Replace(":amount", amount.ToString("F2"))
-                             },
-                             new Content()
-                             {
-                                 Type = "text/html",
-                                 Value =
-                                     template.HtmlContent.Replace(":name", $"{sd.FirstName} {sd.LastName}")
-                                             .Replace(":referenceNumber", referenceNumber)
-                                             .Replace(":amount", amount.ToString("F2"))
-                             },
-                         }
-            };
+            var vm = this._context.SendGridMailService.GetConfirmationEmailViewModelForApplicant(sd, gd, amount, referenceNumber, template); // TODO: make this async/await.
+            await this._context.SendGridMailService.SendAsync(vm).ConfigureAwait(false);
+
+            template = await this._context.SendGridMailService.GetEmailTemplateAsync("SubmissionConfirmationForAdmin").ConfigureAwait(false);
+
+            vm = this._context.SendGridMailService.GetConfirmationEmailViewModelForAdmin(sd, gd, amount, referenceNumber, template); // TODO: make this async/await.
             await this._context.SendGridMailService.SendAsync(vm).ConfigureAwait(false);
 
             return this.RedirectToAction(ThankyouGet);

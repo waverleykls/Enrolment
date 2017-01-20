@@ -17,14 +17,15 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [Route("index")]
         public IActionResult Index()
         {
-            return View();
+            return this.RedirectToAction("Index", "Enrolment");
+            //return View();
         }
 
-        [Route("about")]
-        public IActionResult About()
-        {
-            return View();
-        }
+        //[Route("about")]
+        //public IActionResult About()
+        //{
+        //    return View();
+        //}
 
         /// <summary>
         /// Gets the /home/error page.
