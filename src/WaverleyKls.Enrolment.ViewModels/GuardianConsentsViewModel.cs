@@ -66,7 +66,7 @@ namespace WaverleyKls.Enrolment.ViewModels
         /// <summary>
         /// Gets or sets the additional comments.
         /// </summary>
-        [RegularExpression(@"[\w\s]+")]
+        //[RegularExpression(@"[\w\s]+")]
         public string Comments { get; set; }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace WaverleyKls.Enrolment.ViewModels
         /// <summary>
         /// Gets or sets the medical concern details.
         /// </summary>
-        [RegularExpression(@"[\w\s]+")]
+        //[RegularExpression(@"[\w\s]+")]
         public string MedicalConcernDetails { get; set; }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace WaverleyKls.Enrolment.ViewModels
         /// <summary>
         /// Gets or sets the medication details.
         /// </summary>
-        [RegularExpression(@"[\w\s]+")]
+        //[RegularExpression(@"[\w\s]+")]
         public string MedicationDetails { get; set; }
 
         /// <summary>
