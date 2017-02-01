@@ -37,9 +37,10 @@ namespace WaverleyKls.Enrolment.Services.Interfaces
         /// <summary>
         /// Gets the list of payment details.
         /// </summary>
-        /// <param name="showAll">Value that specifies whether to display all payment details or not. Default is <c>False</c>.</param>
+        /// <param name="yearLevel">Year level value. Default is <c>All</c>.</param>
+        /// <param name="includePaid">Value that specifies whether to include paid enrolment or not. Default is <c>False</c>.</param>
         /// <returns>Returns the list of payment details.</returns>
-        Task<PaymentViewModel> GetPaymentsAsync(bool showAll = false);
+        Task<PaymentViewModel> GetPaymentsAsync(string yearLevel = "all", bool includePaid = false);
 
         /// <summary>
         /// Saves the payment status.

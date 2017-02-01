@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
+using WaverleyKls.Enrolment.Extensions;
 using WaverleyKls.Enrolment.ViewModels;
 using WaverleyKls.Enrolment.WebApp.Contexts;
 
@@ -44,10 +45,15 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            bool result;
-            var showAll = bool.TryParse(this.Request.Query["showAll"], out result) && result;
+            var yearLevelValue = this.Request.Query["yearLevel"].ToString();
+            var yearLevel = yearLevelValue.IsNullOrWhiteSpace() ? "all" : yearLevelValue;
 
-            var vm = await this._context.PaymentService.GetPaymentsAsync(showAll).ConfigureAwait(false);
+            bool result;
+            var includePaid = bool.TryParse(this.Request.Query["includePaid"], out result) && result;
+
+            var vm = await this._context.PaymentService.GetPaymentsAsync(yearLevel, includePaid).ConfigureAwait(false);
+            vm.YearLevel = yearLevel;
+            vm.IncludePaid = includePaid;
 
             return View(vm);
         }

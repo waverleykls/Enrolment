@@ -42,6 +42,11 @@ select.dob {
   width: 100px;
 }
 
+select.admin-year-level {
+  display: inline-block !important;
+  width: 130px;
+}
+
 label.control-label-normal {
   font-weight: normal;
 }

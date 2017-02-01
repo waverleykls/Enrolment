@@ -123,9 +123,10 @@ namespace WaverleyKls.Enrolment.Services
         /// <summary>
         /// Gets the list of payment details.
         /// </summary>
-        /// <param name="showAll">Value that specifies whether to display all payment details or not. Default is <c>False</c>.</param>
+        /// <param name="yearLevel">Year level value. Default is <c>All</c>.</param>
+        /// <param name="includePaid">Value that specifies whether to include paid enrolment or not. Default is <c>False</c>.</param>
         /// <returns>Returns the list of payment details.</returns>
-        public async Task<PaymentViewModel> GetPaymentsAsync(bool showAll = false)
+        public async Task<PaymentViewModel> GetPaymentsAsync(string yearLevel = "all", bool includePaid = false)
         {
             var payments = await this._context.Payments
                                      .Include(p => p.EnrolmentForm)
@@ -136,7 +137,12 @@ namespace WaverleyKls.Enrolment.Services
                                  .ThenBy(p => p.GuardianName)
                                  .ToList();
 
-            var vm = new PaymentViewModel() { Payments = showAll ? models : models.Where(p => !p.IsPaid).ToList() };
+            if (!yearLevel.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+            {
+                models = models.Where(p => p.YearLevel.Equals(yearLevel, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+
+            var vm = new PaymentViewModel() { Payments = includePaid ? models : models.Where(p => !p.IsPaid).ToList() };
 
             return vm;
         }
@@ -287,6 +293,7 @@ namespace WaverleyKls.Enrolment.Services
             var gd = JsonConvert.DeserializeObject<GuardianDetailsViewModel>(payment.EnrolmentForm.GuardianDetails);
 
             vm.StudentName = $"{sd.LastName}, {sd.FirstName}";
+            vm.YearLevel = sd.YearLevel;
             vm.GuardianName = $"{gd.LastName}, {gd.FirstName}";
             vm.GuardianPhone = gd.MobilePhone;
             vm.GuardianEmail = gd.Email;

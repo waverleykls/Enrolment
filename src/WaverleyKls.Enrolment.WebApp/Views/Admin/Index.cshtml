@@ -9,7 +9,21 @@
         "use strict";
 
         (function($) {
-            $(".payment").click(function() {
+            $("#YearLevel").change(function () {
+                var yearLevel = $(this).val();
+                var includePaid = $("input:radio[name='includePaid']:checked").val();
+
+                location.href = "/admin?yearLevel=" + yearLevel + "&includePaid=" + includePaid;
+            });
+
+            $("input:radio[name='includePaid']").click(function () {
+                var yearLevel = $("#YearLevel").val();
+                var includePaid = $(this).val();
+
+                location.href = "/admin?yearLevel=" + yearLevel + "&includePaid=" + includePaid;
+            });
+
+            $(".payment").click(function () {
                 var paymentId = $(this).data("paymentId");
                 var paid = $(this).is(":checked");
 
@@ -19,7 +33,7 @@
                     "contentType": "application/json",
                     "data": JSON.stringify({ "paid": paid }),
                     "dataType": "json"
-                }).done(function (data) {
+                }).done(function(data) {
                     alert("Payment status updated to " + (data.paid ? "PAID" : "NOT PAID"));
                 });
             });
@@ -33,8 +47,18 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
-                <a class="btn btn-info" asp-controller="Admin" asp-action="Index">Unpaid Only</a>
-                <a class="btn btn-primary" asp-controller="Admin" asp-action="Index" asp-route-showAll="true">Show All</a>
+                <div class="form-group">
+                    <select class="form-control admin-year-level" asp-for="YearLevel" asp-items="@Model.YearLevels"></select> |
+
+                    <label>
+                        <input type="radio" name="includePaid" value="false" @(Model.IncludePaid ? string.Empty : "checked=\"checked\"")/> Unpaid Only
+                    </label>
+                    <label>
+                        <input type="radio" name="includePaid" value="true" @(Model.IncludePaid ? "checked=\"checked\"" : string.Empty)/> Include Paid
+                    </label> |
+
+                    <a class="btn btn-info" asp-controller="Admin" asp-action="Index">Reset</a>
+                </div>
             </div>
         </div>
         
@@ -44,6 +68,7 @@
                     <thead>
                         <tr>
                             <th>Student Name</th>
+                            <th>Year</th>
                             <th>Parent/Guardian Name</th>
                             <th>Parent/Guardian Phone</th>
                             <th>Parent/Guardian Email</th>
@@ -57,6 +82,7 @@
                         {
                             <tr>
                                 <td>@payment.StudentName</td>
+                                <td>@payment.YearLevel</td>
                                 <td>@payment.GuardianName</td>
                                 <td>@payment.GuardianPhone</td>
                                 <td>@payment.GuardianEmail</td>
