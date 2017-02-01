@@ -91,6 +91,7 @@ namespace WaverleyKls.Enrolment.WebApp
             services.AddTransient<ISendGridMailService, SendGridMailService>();
 
             services.AddTransient<IEnrolmentContext, EnrolmentContext>();
+            services.AddTransient<IAdminContext, AdminContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

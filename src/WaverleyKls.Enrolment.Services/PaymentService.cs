@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using Newtonsoft.Json;
+
 using WaverleyKls.Enrolment.EntityModels;
 using WaverleyKls.Enrolment.Services.Interfaces;
+using WaverleyKls.Enrolment.ViewModels;
 
 namespace WaverleyKls.Enrolment.Services
 {
@@ -118,6 +121,62 @@ namespace WaverleyKls.Enrolment.Services
         }
 
         /// <summary>
+        /// Gets the list of payment details.
+        /// </summary>
+        /// <param name="showAll">Value that specifies whether to display all payment details or not. Default is <c>False</c>.</param>
+        /// <returns>Returns the list of payment details.</returns>
+        public async Task<PaymentViewModel> GetPaymentsAsync(bool showAll = false)
+        {
+            var payments = await this._context.Payments
+                                     .Include(p => p.EnrolmentForm)
+                                     .ToListAsync().ConfigureAwait(false);
+
+            var models = payments.Select(MapPaymentToPaymentViewModel)
+                                 .OrderBy(p => p.StudentName)
+                                 .ThenBy(p => p.GuardianName)
+                                 .ToList();
+
+            var vm = new PaymentViewModel() { Payments = showAll ? models : models.Where(p => !p.IsPaid).ToList() };
+
+            return vm;
+        }
+
+        /// <summary>
+        /// Saves the payment status.
+        /// </summary>
+        /// <param name="paymentId">Payment Id.</param>
+        /// <param name="isPaid">Value that specifies whether the payment was made or not.</param>
+        /// <returns>Returns the <see cref="PaymentStatusViewModel"/> instance.</returns>
+        /// <exception cref="ArgumentException">Invalid enrolment form Id.</exception>
+        public async Task<PaymentStatusViewModel> SavePaymentStatusAsync(Guid paymentId, bool isPaid)
+        {
+            if (paymentId == Guid.Empty)
+            {
+                throw new ArgumentException();
+            }
+
+            var payment = await this.AddOrUpdatePaymentAsync(paymentId, isPaid).ConfigureAwait(false);
+            if (payment == null)
+            {
+                return new PaymentStatusViewModel() { PaymentId = paymentId, IsPaid = false, DateUpdated = null };
+            }
+
+            var transaction = await this._context.Database.BeginTransactionAsync().ConfigureAwait(false);
+            try
+            {
+                await this._context.SaveChangesAsync().ConfigureAwait(false);
+                transaction.Commit();
+
+                return new PaymentStatusViewModel() { PaymentId = payment.PaymentId, IsPaid = payment.DatePaid > DateTimeOffset.MinValue, DateUpdated = payment.DateUpdated };
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -213,6 +272,28 @@ namespace WaverleyKls.Enrolment.Services
             return valid;
         }
 
+        private static PaymentModel MapPaymentToPaymentViewModel(Payment payment)
+        {
+            var vm = new PaymentModel()
+                     {
+                         PaymentId = payment.PaymentId,
+                         ReferenceNumber = payment.ReferenceNumber,
+                         Amount = payment.Amount
+                     };
+            vm.IsPaid = payment.DatePaid > DateTimeOffset.MinValue;
+            vm.DateConfirmed = payment.DatePaid > DateTimeOffset.MinValue ? payment.DatePaid : (DateTimeOffset?)null;
+
+            var sd = JsonConvert.DeserializeObject<StudentDetailsViewModel>(payment.EnrolmentForm.StudentDetails);
+            var gd = JsonConvert.DeserializeObject<GuardianDetailsViewModel>(payment.EnrolmentForm.GuardianDetails);
+
+            vm.StudentName = $"{sd.LastName}, {sd.FirstName}";
+            vm.GuardianName = $"{gd.LastName}, {gd.FirstName}";
+            vm.GuardianPhone = gd.MobilePhone;
+            vm.GuardianEmail = gd.Email;
+
+            return vm;
+        }
+
         private async Task<Payment> AddOrUpdatePaymentAsync(Guid formId, decimal amount)
         {
             var now = DateTimeOffset.UtcNow;
@@ -228,6 +309,24 @@ namespace WaverleyKls.Enrolment.Services
 
             payment.Amount = amount;
             payment.ReferenceNumber = $"WKLS{adjusted.Year}{adjusted.Month:00}{count + 1:0000}";
+            payment.DateUpdated = now;
+
+            this._context.AddOrUpdate(payment);
+
+            return payment;
+        }
+
+        private async Task<Payment> AddOrUpdatePaymentAsync(Guid paymentId, bool isPaid)
+        {
+            var now = DateTimeOffset.UtcNow;
+
+            var payment = await this._context.Payments.SingleOrDefaultAsync(p => p.PaymentId == paymentId).ConfigureAwait(false);
+            if (payment == null)
+            {
+                return null;
+            }
+
+            payment.DatePaid = isPaid ? now : DateTimeOffset.MinValue;
             payment.DateUpdated = now;
 
             this._context.AddOrUpdate(payment);

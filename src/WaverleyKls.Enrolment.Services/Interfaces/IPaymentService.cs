@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using WaverleyKls.Enrolment.ViewModels;
+
 namespace WaverleyKls.Enrolment.Services.Interfaces
 {
     /// <summary>
@@ -31,5 +33,21 @@ namespace WaverleyKls.Enrolment.Services.Interfaces
         /// <param name="amount">Payment amount.</param>
         /// <returns>Returns the reference number.</returns>
         Task<string> SavePaymentAsync(Guid formId, decimal amount);
+
+        /// <summary>
+        /// Gets the list of payment details.
+        /// </summary>
+        /// <param name="showAll">Value that specifies whether to display all payment details or not. Default is <c>False</c>.</param>
+        /// <returns>Returns the list of payment details.</returns>
+        Task<PaymentViewModel> GetPaymentsAsync(bool showAll = false);
+
+        /// <summary>
+        /// Saves the payment status.
+        /// </summary>
+        /// <param name="paymentId">Payment Id.</param>
+        /// <param name="isPaid">Value that specifies whether the payment was made or not.</param>
+        /// <returns>Returns the <see cref="PaymentStatusViewModel"/> instance.</returns>
+        /// <exception cref="ArgumentException">Invalid enrolment form Id.</exception>
+        Task<PaymentStatusViewModel> SavePaymentStatusAsync(Guid paymentId, bool isPaid);
     }
 }
