@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 using WaverleyKls.Enrolment.Extensions;
 using WaverleyKls.Enrolment.ViewModels;
@@ -23,7 +26,7 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         private readonly IAdminContext _context;
 
         /// <summary>
-        /// Initialises a new instance of the <see cref="AdminController"/> class.
+        /// Initializes a new instance of the <see cref="AdminController"/> class.
         /// </summary>
         /// <param name="context"><see cref="IAdminContext"/> instance.</param>
         /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null" />.</exception>
@@ -81,6 +84,37 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             var result = await this._context.PaymentService.SavePaymentStatusAsync(paymentId, model.IsPaid).ConfigureAwait(false);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Downloads enrolment details.
+        /// </summary>
+        /// <returns>Returns the <see cref="DownloadViewModel"/> instance.</returns>
+        [Route("download")]
+        [HttpGet]
+        public async Task<IActionResult> GetDownloadEnrolmentDetailsForm()
+        {
+            var vm = await this._context.DownloadService.GetDownloadableItemsAsync().ConfigureAwait(false);
+
+            return this.View("DownloadEnrolmentDetails", vm);
+        }
+
+        /// <summary>
+        /// Downloads enrolment details.
+        /// </summary>
+        /// <returns>Returns the <see cref="DownloadViewModel"/> instance.</returns>
+        [Route("download.csv")]
+        [HttpPost]
+        [Produces("text/csv")]
+        public async Task<IActionResult> DownloadEnrolmentDetails(DownloadViewModel model)
+        {
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            var result = await this._context.DownloadService.ProcessDownloadAsync(model).ConfigureAwait(false);
+            return this.Ok(result);
         }
 
         [Route("sign-in")]

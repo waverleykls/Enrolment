@@ -35,7 +35,7 @@
                     <label class="control-label control-label-placeholder" asp-for="Genders"></label>
                     @foreach (var item in Model.Genders)
                     {
-                        <label class="control-label-normal">
+                        <label class="control-label control-label-normal">
                             <input asp-for="Gender" type="radio" value="@item.Value" /> @item.Text
                         </label>
                     }
@@ -69,7 +69,7 @@
                     <div style="display: inline-block;">
                         @foreach (var item in Model.FeeSchemes)
                         {
-                            <label class="control-label-normal">
+                            <label class="control-label control-label-normal">
                                 <input asp-for="IsDomestic" type="radio" value="@item.Value" /> @item.Text
                             </label><br />
                         }

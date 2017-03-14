@@ -1,0 +1,52 @@
+﻿@using WaverleyKls.Enrolment.Extensions
+@model WaverleyKls.Enrolment.ViewModels.DownloadViewModel
+@{
+    ViewData["Title"] = "Download Page";
+}
+
+<div class="row">
+    <h2>Download Enrolment Details</h2>
+    
+    <form class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-horizontal" asp-controller="Admin" asp-action="DownloadEnrolmentDetails" method="post">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <h3>Student Details</h3>
+                
+                <ul>
+                    @for (var i = 0; i < Model.StudentDetails.Count; i++)
+                    {
+                        var item = Model.StudentDetails[i];
+                        <li>
+                            <label>
+                                <input type="checkbox" asp-for="@Model.StudentDetailsSelected[i]" /> @item.Text
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <h3>Guardian Details</h3>
+
+                <ul>
+                    @for (var i = 0; i < Model.GuardianDetails.Count; i++)
+                    {
+                        var item = Model.GuardianDetails[i];
+                        <li>
+                            <label>
+                                <input type="checkbox" asp-for="@Model.GuardianDetailsSelected[i]" /> @item.Text
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                <button type="submit" class="btn btn-primary">Download</button>
+            </div>
+        </div>
+    </form>
+</div>
+

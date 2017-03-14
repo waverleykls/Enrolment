@@ -55,5 +55,38 @@ namespace WaverleyKls.Enrolment.ViewModels.Generators
                          };
             return states;
         }
+
+        /// <summary>
+        /// Gets the list of student details for download.
+        /// </summary>
+        /// <returns>Returns the list of student details for download.</returns>
+        public static IEnumerable<KeyValuePair<string, string>> GetStudentDetails()
+        {
+            var items = new[]
+                            {
+                                new KeyValuePair<string, string>("Name", "sname"),
+                                new KeyValuePair<string, string>("Date of Birth", "dob"),
+                                new KeyValuePair<string, string>("Gender", "gender"),
+                                new KeyValuePair<string, string>("School Name", "school"),
+                                new KeyValuePair<string, string>("Year Level", "year"),
+                                new KeyValuePair<string, string>("Address", "address"),
+                            };
+            return items;
+        }
+
+        /// <summary>
+        /// Gets the list of parent/guardian details for download.
+        /// </summary>
+        /// <returns>Returns the list of parent/guardian details for download.</returns>
+        public static IEnumerable<KeyValuePair<string, string>> GetGuardianDetails()
+        {
+            var items = new[]
+                            {
+                                new KeyValuePair<string, string>("Name", "gname"),
+                                new KeyValuePair<string, string>("Phone", "phone"),
+                                new KeyValuePair<string, string>("Email", "email"),
+                            };
+            return items;
+        }
     }
 }

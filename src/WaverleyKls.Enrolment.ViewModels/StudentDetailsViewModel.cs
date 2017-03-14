@@ -207,8 +207,8 @@ namespace WaverleyKls.Enrolment.ViewModels
         public void Initialise()
         {
             this.Dates = DateTimeItemsGenerator.GetDates()
-                                              .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
-                                              .ToList();
+                                               .Select(p => new SelectListItem() { Text = p.Key, Value = p.Value.ToString() })
+                                               .ToList();
             this.Dates.Insert(0, new SelectListItem() { Text = "Date", Value = string.Empty });
 
             this.Months = DateTimeItemsGenerator.GetMonths()

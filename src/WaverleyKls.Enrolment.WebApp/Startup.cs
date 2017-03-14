@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -21,6 +22,8 @@ using WaverleyKls.Enrolment.Services.Interfaces;
 using WaverleyKls.Enrolment.Settings;
 using WaverleyKls.Enrolment.WebApp.Contexts;
 using WaverleyKls.Enrolment.WebApp.Settings;
+
+using WebApiContrib.Core.Formatter.Csv;
 
 namespace WaverleyKls.Enrolment.WebApp
 {
@@ -50,7 +53,11 @@ namespace WaverleyKls.Enrolment.WebApp
             var connStrings = Configuration.Get<ConnectionStringsSettings>("connectionStrings");
             services.AddDbContext<WklsDbContext>(o => o.UseSqlServer(connStrings.WklsDbContext));
 
-            services.AddMvc()
+            services.AddMvc(o =>
+                    {
+                        o.OutputFormatters.Add(new CsvOutputFormatter(new CsvFormatterOptions() { CsvDelimiter = "," }));
+                        o.FormatterMappings.SetMediaTypeMappingForFormat("csv", MediaTypeHeaderValue.Parse("text/csv"));
+                    })
                     .AddMvcOptions(o => o.Filters.Add(new RequireHttpsAttribute()))
                     .AddJsonOptions(o =>
                     {
@@ -89,6 +96,7 @@ namespace WaverleyKls.Enrolment.WebApp
             services.AddTransient<IGuardianConsentsService, GuardianConsentsService>();
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<ISendGridMailService, SendGridMailService>();
+            services.AddTransient<IDownloadService, DownloadService>();
 
             services.AddTransient<IEnrolmentContext, EnrolmentContext>();
             services.AddTransient<IAdminContext, AdminContext>();

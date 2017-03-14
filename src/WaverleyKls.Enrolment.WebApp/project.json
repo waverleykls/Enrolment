@@ -36,7 +36,8 @@
     "Newtonsoft.Json": "9.0.1",
     "WaverleyKls.Enrolment.Helpers": "1.0.0-*",
     "WaverleyKls.Enrolment.Services": "1.0.0-*",
-    "WaverleyKls.Enrolment.ViewModels": "1.0.0-*"
+    "WaverleyKls.Enrolment.ViewModels": "1.0.0-*",
+    "WebApiContrib.Core.Formatter.Csv": "1.0.1"
   },
 
   "tools": {
@@ -50,7 +51,7 @@
   "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true,
-    "define": []
+    "define": [ "DEBUG" ]
   },
 
   "publishOptions": {

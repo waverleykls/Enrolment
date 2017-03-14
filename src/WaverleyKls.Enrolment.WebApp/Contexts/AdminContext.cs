@@ -16,9 +16,11 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
         /// </summary>
         /// <param name="paymentService"><see cref="IPaymentService"/> instance.</param>
         /// <param name="sendGridMailService"><see cref="ISendGridMailService"/> instance.</param>
+        /// <param name="downloadService"><see cref="IDownloadService"/> instance.</param>
         /// <exception cref="ArgumentNullException"><paramref name="paymentService"/> is <see langword="null" />.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="sendGridMailService"/> is <see langword="null" />.</exception>
-        public AdminContext(IPaymentService paymentService, ISendGridMailService sendGridMailService)
+        /// <exception cref="ArgumentNullException"><paramref name="downloadService"/> is <see langword="null" />.</exception>
+        public AdminContext(IPaymentService paymentService, ISendGridMailService sendGridMailService, IDownloadService downloadService)
         {
             if (paymentService == null)
             {
@@ -33,6 +35,13 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
             }
 
             this.SendGridMailService = sendGridMailService;
+
+            if (downloadService == null)
+            {
+                throw new ArgumentNullException(nameof(downloadService));
+            }
+
+            this.DownloadService = downloadService;
         }
 
         /// <summary>
@@ -44,6 +53,11 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
         /// Gets the <see cref="ISendGridMailService"/> instance.
         /// </summary>
         public ISendGridMailService SendGridMailService { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IDownloadService"/> instance.
+        /// </summary>
+        public IDownloadService DownloadService { get; }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

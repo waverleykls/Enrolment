@@ -19,5 +19,10 @@ namespace WaverleyKls.Enrolment.WebApp.Contexts
         /// Gets the <see cref="ISendGridMailService"/> instance.
         /// </summary>
         ISendGridMailService SendGridMailService { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IDownloadService"/> instance.
+        /// </summary>
+        IDownloadService DownloadService { get; }
     }
 }
