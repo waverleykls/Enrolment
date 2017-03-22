@@ -59,6 +59,11 @@ namespace WaverleyKls.Enrolment.ViewModels
         public bool[] GuardianDetailsSelected { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to download only paid student details or not.
+        /// </summary>
+        public bool IsPaidOnly { get; set; }
+
+        /// <summary>
         /// Initialize a new instance of the <see cref="DownloadViewModel"/> class.
         /// </summary>
         public void Initialise()
@@ -74,6 +79,8 @@ namespace WaverleyKls.Enrolment.ViewModels
                                                        .ToList();
 
             this.GuardianDetailsSelected = new bool[this.GuardianDetails.Count];
+
+            this.IsPaidOnly = true;
         }
 
         /// <summary>

@@ -59,7 +59,7 @@ namespace WaverleyKls.Enrolment.Services
         {
             var dms = await this._context.Payments
                                 .Include(p => p.EnrolmentForm)
-                                .Where(p => this.IsDownloadable(p))
+                                .Where(p => this.IsDownloadable(model, p))
                                 .Select(p => this.GetDownloadable(model, p))
                                 .ToListAsync().ConfigureAwait(false);
 
@@ -82,19 +82,17 @@ namespace WaverleyKls.Enrolment.Services
         {
             var sd = JsonConvert.DeserializeObject<StudentDetailsViewModel>(payment.EnrolmentForm.StudentDetails);
             var gd = JsonConvert.DeserializeObject<GuardianDetailsViewModel>(payment.EnrolmentForm.GuardianDetails);
-            var dm = new DownloadableViewModel(model, sd, gd);
+            var dm = new DownloadableViewModel(model, sd, gd, payment.DatePaid > DateTimeOffset.MinValue);
 
             return dm;
         }
 
-        private bool IsDownloadable(Payment payment)
+        private bool IsDownloadable(DownloadViewModel model, Payment payment)
         {
-#if !DEBUG
-            if (payment.DatePaid == DateTimeOffset.MinValue)
+            if (model.IsPaidOnly && payment.DatePaid == DateTimeOffset.MinValue)
             {
                 return false;
             }
-#endif
 
             var sd = JsonConvert.DeserializeObject<StudentDetailsViewModel>(payment.EnrolmentForm.StudentDetails);
             if (!sd.IsDomestic)

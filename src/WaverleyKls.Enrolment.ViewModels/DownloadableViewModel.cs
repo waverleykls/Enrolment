@@ -13,6 +13,7 @@ namespace WaverleyKls.Enrolment.ViewModels
         private readonly DownloadViewModel _dm;
         private readonly StudentDetailsViewModel _sd;
         private readonly GuardianDetailsViewModel _gd;
+        private readonly bool _hasPaid;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DownloadableViewModel"/> class.
@@ -20,10 +21,11 @@ namespace WaverleyKls.Enrolment.ViewModels
         /// <param name="dm"><see cref="DownloadViewModel"/> instance.</param>
         /// <param name="sd"><see cref="StudentDetailsViewModel"/> instance.</param>
         /// <param name="gd"><see cref="GuardianDetailsViewModel"/> instance.</param>
+        /// <param name="hasPaid">Value indicating whether the payment has been made or not.</param>
         /// <exception cref="ArgumentNullException"><paramref name="dm"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentNullException"><paramref name="sd"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentNullException"><paramref name="gd"/> is <see langword="null"/></exception>
-        public DownloadableViewModel(DownloadViewModel dm, StudentDetailsViewModel sd, GuardianDetailsViewModel gd)
+        public DownloadableViewModel(DownloadViewModel dm, StudentDetailsViewModel sd, GuardianDetailsViewModel gd, bool hasPaid)
         {
             if (dm == null)
             {
@@ -45,6 +47,8 @@ namespace WaverleyKls.Enrolment.ViewModels
             }
 
             this._gd = gd;
+
+            this._hasPaid = hasPaid;
 
             this.Initialise();
         }
@@ -95,6 +99,11 @@ namespace WaverleyKls.Enrolment.ViewModels
         public string GuardianEmail { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to have paid or not.
+        /// </summary>
+        public bool HasPaid { get; set; }
+
+        /// <summary>
         /// Initialize a new instance of the <see cref="DownloadableViewModel"/> class.
         /// </summary>
         public void Initialise()
@@ -140,16 +149,18 @@ namespace WaverleyKls.Enrolment.ViewModels
             {
                 //this.GuardianContact = this._gd.MobilePhone;
                 this.GuardianContact = !this._gd.MobilePhone.IsNullOrWhiteSpace()
-                                           ? this._gd.MobilePhone
+                                           ? this._gd.MobilePhone.ToMobile()
                                            : !this._gd.WorkPhone.IsNullOrWhiteSpace()
-                                               ? this._gd.WorkPhone
-                                               : this._gd.HomePhone;
+                                               ? this._gd.WorkPhone.ToPhone()
+                                               : this._gd.HomePhone.ToPhone();
             }
 
             if (items.ContainsKey("email") && items["email"])
             {
                 this.GuardianEmail = this._gd.Email;
             }
+
+            this.HasPaid = this._hasPaid;
         }
 
         private static Dictionary<string, bool> ResolveSelectedItems(DownloadViewModel dm)

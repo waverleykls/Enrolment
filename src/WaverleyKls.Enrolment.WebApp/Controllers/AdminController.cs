@@ -102,6 +102,7 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
         /// <summary>
         /// Downloads enrolment details.
         /// </summary>
+        /// <param name="model"><see cref="DownloadViewModel"/> instance.</param>
         /// <returns>Returns the <see cref="DownloadViewModel"/> instance.</returns>
         [Route("download.csv")]
         [HttpPost]

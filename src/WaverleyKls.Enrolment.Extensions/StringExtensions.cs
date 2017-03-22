@@ -35,5 +35,51 @@ namespace WaverleyKls.Enrolment.Extensions
 
             return result;
         }
+
+        /// <summary>
+        /// Converts the string value to a mobile phone number format (xxxx xxx xxx).
+        /// </summary>
+        /// <param name="value">Mobile phone number value.</param>
+        /// <returns>Returns the mobile phone number format.</returns>
+        public static string ToMobile(this string value)
+        {
+            if (value.IsNullOrWhiteSpace())
+            {
+                return value;
+            }
+
+            var formatted = value.Replace(" ", string.Empty).Replace("-", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty);
+            if (formatted.Length != 10)
+            {
+
+                return value;
+            }
+
+            formatted = $"{formatted.Substring(0, 4)} {formatted.Substring(4, 3)} {formatted.Substring(7, 3)}";
+            return formatted;
+        }
+
+        /// <summary>
+        /// Converts the string value to a phone number format (xx xxxx xxxx).
+        /// </summary>
+        /// <param name="value">Mobile phone number value.</param>
+        /// <returns>Returns the mobile phone number format.</returns>
+        public static string ToPhone(this string value)
+        {
+            if (value.IsNullOrWhiteSpace())
+            {
+                return value;
+            }
+
+            var formatted = value.Replace(" ", string.Empty).Replace("-", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty);
+            if (formatted.Length != 10)
+            {
+
+                return value;
+            }
+
+            formatted = $"{formatted.Substring(0, 2)} {formatted.Substring(2, 4)} {formatted.Substring(6, 4)}";
+            return formatted;
+        }
     }
 }
