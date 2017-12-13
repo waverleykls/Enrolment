@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -83,7 +83,7 @@
         }
 
         .reference-number {
-            color: blue !important;
+            color: red !important;
         }
 
         @media only screen and (max-device-width: 480px) {
@@ -157,7 +157,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <p>Thanks for submitting the enrolment form of your child, :name. Your reference number is <strong class="reference-number">:referenceNumber</strong>.</p>
+                            <p>Thanks for submitting the enrolment form of your child, :name. Your reference number is <span class="reference-number"><strong>:referenceNumber</strong></span>.</p>
                             <p>Please find the payment details below:</p>
                         </td>
                     </tr>
@@ -169,7 +169,7 @@
                                 <li>BSB: 063 581</li>
                                 <li>Account: 10109257</li>
                                 <li>Account Name: Waverley Korean Language School INC</li>
-                                <li>Reference: :referenceNumber</li>
+                                <li>Reference: <span class="reference-number"><strong>:referenceNumber</strong></span></li>
                             </ul>
                         </td>
                     </tr>

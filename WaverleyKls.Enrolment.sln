@@ -1,33 +1,32 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{85E520AD-94BA-421C-B64D-EA364574C937}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BE1D2C1-5E3C-4BCD-8198-67EC54C3394C}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
 		Settings.StyleCop = Settings.StyleCop
 		WaverleyKls.Enrolment.sln.DotSettings = WaverleyKls.Enrolment.sln.DotSettings
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.WebApp", "src\WaverleyKls.Enrolment.WebApp\WaverleyKls.Enrolment.WebApp.xproj", "{64213BDC-C320-4F96-B7E7-8F92E61C2B60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaverleyKls.Enrolment.WebApp", "src\WaverleyKls.Enrolment.WebApp\WaverleyKls.Enrolment.WebApp.csproj", "{64213BDC-C320-4F96-B7E7-8F92E61C2B60}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.ViewModels", "src\WaverleyKls.Enrolment.ViewModels\WaverleyKls.Enrolment.ViewModels.xproj", "{A63F6848-2CE4-4A82-8666-6994A48CD4BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaverleyKls.Enrolment.ViewModels", "src\WaverleyKls.Enrolment.ViewModels\WaverleyKls.Enrolment.ViewModels.csproj", "{A63F6848-2CE4-4A82-8666-6994A48CD4BF}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.Helpers", "src\WaverleyKls.Enrolment.Helpers\WaverleyKls.Enrolment.Helpers.xproj", "{902B5F65-B787-47E7-B7DE-F685F011125C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaverleyKls.Enrolment.Helpers", "src\WaverleyKls.Enrolment.Helpers\WaverleyKls.Enrolment.Helpers.csproj", "{902B5F65-B787-47E7-B7DE-F685F011125C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.Extensions", "src\WaverleyKls.Enrolment.Extensions\WaverleyKls.Enrolment.Extensions.xproj", "{71CA5D94-A18C-4BAF-8B2E-B6640E7CC02C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaverleyKls.Enrolment.Extensions", "src\WaverleyKls.Enrolment.Extensions\WaverleyKls.Enrolment.Extensions.csproj", "{71CA5D94-A18C-4BAF-8B2E-B6640E7CC02C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.EntityModels", "src\WaverleyKls.Enrolment.EntityModels\WaverleyKls.Enrolment.EntityModels.xproj", "{46001BA4-7C5F-406C-B1B2-39878DBB1286}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaverleyKls.Enrolment.EntityModels", "src\WaverleyKls.Enrolment.EntityModels\WaverleyKls.Enrolment.EntityModels.csproj", "{46001BA4-7C5F-406C-B1B2-39878DBB1286}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.Services", "src\WaverleyKls.Enrolment.Services\WaverleyKls.Enrolment.Services.xproj", "{0169343B-C653-4C50-BA86-C3EDCFFE59AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaverleyKls.Enrolment.Services", "src\WaverleyKls.Enrolment.Services\WaverleyKls.Enrolment.Services.csproj", "{0169343B-C653-4C50-BA86-C3EDCFFE59AC}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaverleyKls.Enrolment.Settings", "src\WaverleyKls.Enrolment.Settings\WaverleyKls.Enrolment.Settings.xproj", "{F18ED2D3-A1D2-461C-9813-AA90680FA65B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaverleyKls.Enrolment.Settings", "src\WaverleyKls.Enrolment.Settings\WaverleyKls.Enrolment.Settings.csproj", "{F18ED2D3-A1D2-461C-9813-AA90680FA65B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,5 +74,8 @@ Global
 		{46001BA4-7C5F-406C-B1B2-39878DBB1286} = {85E520AD-94BA-421C-B64D-EA364574C937}
 		{0169343B-C653-4C50-BA86-C3EDCFFE59AC} = {85E520AD-94BA-421C-B64D-EA364574C937}
 		{F18ED2D3-A1D2-461C-9813-AA90680FA65B} = {85E520AD-94BA-421C-B64D-EA364574C937}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD7749A1-F3AA-427E-9AA7-BB37081DC538}
 	EndGlobalSection
 EndGlobal

@@ -235,28 +235,28 @@ namespace WaverleyKls.Enrolment.Services
 
         private static bool IsInFirstTerm(DateTimeOffset now)
         {
-            var firstTermEnd = new DateTimeOffset(2017, 4, 1, 0, 0, 0, new TimeSpan(0, 11, 0, 0));
+            var firstTermEnd = new DateTimeOffset(2018, 3, 30, 0, 0, 0, new TimeSpan(0, 11, 0, 0));
 
             return now < firstTermEnd;
         }
 
         private static bool IsInSecondTerm(DateTimeOffset now)
         {
-            var secondTermEnd = new DateTimeOffset(2017, 7, 1, 0, 0, 0, new TimeSpan(0, 10, 0, 0));
+            var secondTermEnd = new DateTimeOffset(2018, 6, 30, 0, 0, 0, new TimeSpan(0, 10, 0, 0));
 
             return now < secondTermEnd;
         }
 
         private static bool IsInThirdTerm(DateTimeOffset now)
         {
-            var thirdTermEnd = new DateTimeOffset(2017, 9, 23, 0, 0, 0, new TimeSpan(0, 10, 0, 0));
+            var thirdTermEnd = new DateTimeOffset(2018, 9, 22, 0, 0, 0, new TimeSpan(0, 10, 0, 0));
 
             return now < thirdTermEnd;
         }
 
         private static bool IsInFourthTerm(DateTimeOffset now)
         {
-            var fourthTermEnd = new DateTimeOffset(2017, 12, 22, 0, 0, 0, new TimeSpan(0, 11, 0, 0));
+            var fourthTermEnd = new DateTimeOffset(2018, 12, 22, 0, 0, 0, new TimeSpan(0, 11, 0, 0));
 
             return now < fourthTermEnd;
         }
@@ -315,7 +315,7 @@ namespace WaverleyKls.Enrolment.Services
             var count = await this._context.Payments.CountAsync().ConfigureAwait(false);
 
             payment.Amount = amount;
-            payment.ReferenceNumber = $"WKLS{adjusted.Year}{adjusted.Month:00}{count + 1:0000}";
+            payment.ReferenceNumber = $"WKLS-2018-{count + 1:000}";
             payment.DateUpdated = now;
 
             this._context.AddOrUpdate(payment);
