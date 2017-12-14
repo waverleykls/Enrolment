@@ -87,15 +87,21 @@ namespace WaverleyKls.Enrolment.Services
         /// Saves the payment details into the database.
         /// </summary>
         /// <param name="formId">Enrolment form Id.</param>
+        /// <param name="lastName">Student's last name.</param>
         /// <param name="amount">Payment amount.</param>
         /// <returns>Returns the reference number.</returns>
         /// <exception cref="ArgumentException">Invalid enrolment form Id.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Invalid amount.</exception>
-        public async Task<string> SavePaymentAsync(Guid formId, decimal amount)
+        public async Task<string> SavePaymentAsync(Guid formId, string lastName, decimal amount)
         {
             if (formId == Guid.Empty)
             {
                 throw new ArgumentException("Invalid enrolment form Id", nameof(formId));
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName));
             }
 
             if (!IsValidAmount(amount))
@@ -103,7 +109,7 @@ namespace WaverleyKls.Enrolment.Services
                 throw new ArgumentOutOfRangeException(nameof(amount), "Invalid amount");
             }
 
-            var payment = await this.AddOrUpdatePaymentAsync(formId, amount).ConfigureAwait(false);
+            var payment = await this.AddOrUpdatePaymentAsync(formId, lastName, amount).ConfigureAwait(false);
 
             var transaction = await this._context.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
@@ -301,7 +307,7 @@ namespace WaverleyKls.Enrolment.Services
             return vm;
         }
 
-        private async Task<Payment> AddOrUpdatePaymentAsync(Guid formId, decimal amount)
+        private async Task<Payment> AddOrUpdatePaymentAsync(Guid formId, string lastName, decimal amount)
         {
             var now = DateTimeOffset.UtcNow;
 
@@ -315,7 +321,7 @@ namespace WaverleyKls.Enrolment.Services
             var count = await this._context.Payments.CountAsync().ConfigureAwait(false);
 
             payment.Amount = amount;
-            payment.ReferenceNumber = $"WKLS-2018-{count + 1:000}";
+            payment.ReferenceNumber = $"WKLS-{count + 1:000}";
             payment.DateUpdated = now;
 
             this._context.AddOrUpdate(payment);

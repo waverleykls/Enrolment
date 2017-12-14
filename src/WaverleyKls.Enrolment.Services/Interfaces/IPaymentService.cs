@@ -30,9 +30,10 @@ namespace WaverleyKls.Enrolment.Services.Interfaces
         /// Saves the payment details into the database.
         /// </summary>
         /// <param name="formId">Enrolment form Id.</param>
+        /// <param name="lastName">Student's last name.</param>
         /// <param name="amount">Payment amount.</param>
         /// <returns>Returns the reference number.</returns>
-        Task<string> SavePaymentAsync(Guid formId, decimal amount);
+        Task<string> SavePaymentAsync(Guid formId, string lastName, decimal amount);
 
         /// <summary>
         /// Gets the list of payment details.

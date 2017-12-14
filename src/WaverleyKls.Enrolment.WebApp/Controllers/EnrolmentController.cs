@@ -360,7 +360,7 @@ namespace WaverleyKls.Enrolment.WebApp.Controllers
             var gd = await this._context.GuardianDetailsService.GetGuardianDetailsAsync(formId).ConfigureAwait(false);
 
             var amount = await this._context.PaymentService.GetAmountAsync(sd.IsDomestic, sd.YearLevel, DateTimeOffset.UtcNow).ConfigureAwait(false);
-            var referenceNumber = await this._context.PaymentService.SavePaymentAsync(formId, amount).ConfigureAwait(false);
+            var referenceNumber = await this._context.PaymentService.SavePaymentAsync(formId, sd.LastName, amount).ConfigureAwait(false);
 
             var template = await this._context.SendGridMailService.GetEmailTemplateAsync("SubmissionConfirmationForApplicant").ConfigureAwait(false);
 
