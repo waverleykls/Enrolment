@@ -33,7 +33,7 @@ namespace WaverleyKls.Enrolment.EntityModels
         public DateTimeOffset DatePaid { get; set; }
 
         ///// <summary>
-        ///// Gets or setes the date when the payment was confirmed.
+        ///// Gets or sets the date when the payment was confirmed.
         ///// </summary>
         //public DateTimeOffset DateConfirmed { get; set; }
 

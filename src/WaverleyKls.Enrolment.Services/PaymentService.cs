@@ -139,7 +139,8 @@ namespace WaverleyKls.Enrolment.Services
                                      .ToListAsync().ConfigureAwait(false);
 
             var models = payments.Select(MapPaymentToPaymentViewModel)
-                                 .OrderBy(p => p.StudentName)
+                                 .OrderByDescending(p => p.DateEnrolled)
+                                 .ThenBy(p => p.StudentName)
                                  .ThenBy(p => p.GuardianName)
                                  .ToList();
 
@@ -297,6 +298,8 @@ namespace WaverleyKls.Enrolment.Services
 
             var sd = JsonConvert.DeserializeObject<StudentDetailsViewModel>(payment.EnrolmentForm.StudentDetails);
             var gd = JsonConvert.DeserializeObject<GuardianDetailsViewModel>(payment.EnrolmentForm.GuardianDetails);
+
+            vm.DateEnrolled = payment.EnrolmentForm.DateCreated;
 
             vm.StudentName = $"{sd.LastName}, {sd.FirstName}";
             vm.YearLevel = sd.YearLevel;

@@ -107,6 +107,11 @@ namespace WaverleyKls.Enrolment.ViewModels
         public bool IsPaid { get; set; }
 
         /// <summary>
+        /// Gets or sets the date when the enrolment record was created.
+        /// </summary>
+        public DateTimeOffset DateEnrolled { get; set; }
+
+        /// <summary>
         /// Gets or sets the date when the payment was confirmed.
         /// </summary>
         public DateTimeOffset? DateConfirmed { get; set; }
