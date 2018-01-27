@@ -299,7 +299,11 @@ namespace WaverleyKls.Enrolment.Services
             var sd = JsonConvert.DeserializeObject<StudentDetailsViewModel>(payment.EnrolmentForm.StudentDetails);
             var gd = JsonConvert.DeserializeObject<GuardianDetailsViewModel>(payment.EnrolmentForm.GuardianDetails);
 
-            vm.DateEnrolled = payment.EnrolmentForm.DateCreated;
+            var tzi = TimeZoneInfo.GetSystemTimeZones().SingleOrDefault(p => p.Id == "AUS Eastern Standard Time");
+            var offset = tzi.GetUtcOffset(payment.EnrolmentForm.DateCreated);
+            var enrolled = payment.EnrolmentForm.DateCreated.ToOffset(offset);
+
+            vm.DateEnrolled = enrolled;
 
             vm.StudentName = $"{sd.LastName}, {sd.FirstName}";
             vm.YearLevel = sd.YearLevel;

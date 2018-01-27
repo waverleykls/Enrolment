@@ -90,7 +90,7 @@
                                 <td>@payment.GuardianEmail</td>
                                 <td>$@($"{payment.Amount:F2}")</td>
                                 <td>@payment.ReferenceNumber</td>
-                                <td>@payment.DateEnrolled</td>
+                                <td>@payment.DateEnrolled.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <input type="checkbox" class="payment" data-payment-id="@payment.PaymentId" @(payment.IsPaid ? "checked=\"checked\"" : string.Empty) />
                                 </td>
