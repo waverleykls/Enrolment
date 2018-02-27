@@ -61,6 +61,9 @@ namespace WaverleyKls.Enrolment.Services
                                 .Include(p => p.EnrolmentForm)
                                 .Where(p => this.IsDownloadable(model, p))
                                 .Select(p => this.GetDownloadable(model, p))
+                                .OrderByDescending(p => p.DateEnrolled)
+                                .ThenBy(p => p.StudentName)
+                                .ThenBy(p => p.GuardianName)
                                 .ToListAsync().ConfigureAwait(false);
 
             return dms;
@@ -82,7 +85,11 @@ namespace WaverleyKls.Enrolment.Services
         {
             var sd = JsonConvert.DeserializeObject<StudentDetailsViewModel>(payment.EnrolmentForm.StudentDetails);
             var gd = JsonConvert.DeserializeObject<GuardianDetailsViewModel>(payment.EnrolmentForm.GuardianDetails);
-            var dm = new DownloadableViewModel(model, sd, gd, payment.DatePaid > DateTimeOffset.MinValue);
+
+            var tzi = TimeZoneInfo.GetSystemTimeZones().SingleOrDefault(p => p.Id == "AUS Eastern Standard Time");
+            var offset = tzi.GetUtcOffset(payment.EnrolmentForm.DateCreated);
+
+            var dm = new DownloadableViewModel(model, sd, gd, payment.DatePaid > DateTimeOffset.MinValue, payment.EnrolmentForm.DateCreated.ToOffset(offset));
 
             return dm;
         }
